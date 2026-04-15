@@ -1681,8 +1681,8 @@
 
       function registrarFirma() {
         const iso = el.fechaClase.value;
-        const tipo = el.tipoRegistro.value;
-        const justificacion = el.justificacion.value.trim();
+        let tipo = el.tipoRegistro.value;
+        let justificacion = el.justificacion.value.trim();
         const firma = obtenerFirmaData();
 
         if (!iso) {
@@ -1715,14 +1715,27 @@
           alert("No es posible firmar una fecha futura.");
           return;
         }
-        if (tipo === "normal" && !isToday && !reopened) {
-          alert("La firma normal solo puede registrarse en la fecha actual o en una fecha reabierta por administración.");
-          return;
+
+        if (state.adminMode) {
+          // Modo administración: permite firmar cualquier fecha pasada o actual.
+          // Si es pasada, fuerza tipo ajuste y auto-completa justificación si está vacía.
+          if (isPast || reopened) {
+            tipo = "ajuste";
+            if (!justificacion) {
+              justificacion = "Registrado en modo administración.";
+            }
+          }
+        } else {
+          if (tipo === "normal" && !isToday && !reopened) {
+            alert("La firma normal solo puede registrarse en la fecha actual o en una fecha reabierta por administración.");
+            return;
+          }
+          if ((tipo === "ajuste" || reopened || isPast) && !justificacion) {
+            alert("Debe diligenciar la justificación para registrar una firma posterior o una fecha reabierta.");
+            return;
+          }
         }
-        if ((tipo === "ajuste" || reopened || isPast) && !justificacion) {
-          alert("Debe diligenciar la justificación para registrar una firma posterior o una fecha reabierta.");
-          return;
-        }
+
         if (row.firma && !state.adminMode) {
           alert("La fecha ya tiene una firma registrada.");
           return;
