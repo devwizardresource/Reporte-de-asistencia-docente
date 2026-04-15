@@ -1495,6 +1495,12 @@
         renderTable();
       }
 
+      function sincronizarTipoRegistro(iso) {
+        const now = new Date();
+        const todayISO = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
+        el.tipoRegistro.value = (iso && iso < todayISO) ? "ajuste" : "normal";
+      }
+
       function sugerirFechaFirma() {
         if (!state.rows.length) return;
         const now = new Date();
@@ -1502,22 +1508,26 @@
         // 1. Hoy es día de clase
         if (state.rows.some(function (r) { return r.fechaISO === todayISO; })) {
           el.fechaClase.value = todayISO;
+          sincronizarTipoRegistro(todayISO);
           return;
         }
-        // 2. Última fecha pasada sin firma (para registro posterior)
+        // 2. Última fecha pasada sin firma (firma posterior con ajuste)
         const pasadas = state.rows.filter(function (r) { return r.fechaISO < todayISO && !r.firma; });
         if (pasadas.length) {
           el.fechaClase.value = pasadas[pasadas.length - 1].fechaISO;
+          sincronizarTipoRegistro(pasadas[pasadas.length - 1].fechaISO);
           return;
         }
         // 3. Primera fecha futura
         const futuras = state.rows.filter(function (r) { return r.fechaISO > todayISO; });
         if (futuras.length) {
           el.fechaClase.value = futuras[0].fechaISO;
+          sincronizarTipoRegistro(futuras[0].fechaISO);
           return;
         }
         // 4. Fallback: hoy
         el.fechaClase.value = todayISO;
+        sincronizarTipoRegistro(todayISO);
       }
 
       function addWeeksSchedule() {
@@ -1914,6 +1924,9 @@
         document.getElementById("btnReopen").addEventListener("click", reabrirFecha);
 
         el.selectorHorario.addEventListener("change", cargarDesdeSelector);
+        el.fechaClase.addEventListener("change", function () {
+          sincronizarTipoRegistro(el.fechaClase.value);
+        });
         el.adminModeSelect.addEventListener("change", function () {
           enableAdminMode();
         });
