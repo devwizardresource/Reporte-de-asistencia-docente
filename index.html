@@ -1449,6 +1449,7 @@
         });
         renderHistory();
         runTests();
+        autoGuardar();
       }
 
       function addHistory(tipo, fechaClase, detalle) {
@@ -1489,8 +1490,34 @@
         state.history = [];
         state.reopenedDates = [];
         syncPreview();
+        sugerirFechaFirma();
         addHistory("Carga automática", "-", "Se cargó el horario de " + item.codigoMateria + " · " + item.materia + " · " + item.grupo + ".");
         renderTable();
+      }
+
+      function sugerirFechaFirma() {
+        if (!state.rows.length) return;
+        const now = new Date();
+        const todayISO = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
+        // 1. Hoy es día de clase
+        if (state.rows.some(function (r) { return r.fechaISO === todayISO; })) {
+          el.fechaClase.value = todayISO;
+          return;
+        }
+        // 2. Última fecha pasada sin firma (para registro posterior)
+        const pasadas = state.rows.filter(function (r) { return r.fechaISO < todayISO && !r.firma; });
+        if (pasadas.length) {
+          el.fechaClase.value = pasadas[pasadas.length - 1].fechaISO;
+          return;
+        }
+        // 3. Primera fecha futura
+        const futuras = state.rows.filter(function (r) { return r.fechaISO > todayISO; });
+        if (futuras.length) {
+          el.fechaClase.value = futuras[0].fechaISO;
+          return;
+        }
+        // 4. Fallback: hoy
+        el.fechaClase.value = todayISO;
       }
 
       function addWeeksSchedule() {
@@ -1706,8 +1733,8 @@
         alert("Firma registrada correctamente.");
       }
 
-      function guardarLocal() {
-        const payload = {
+      function buildPayload() {
+        return {
           campos: Object.fromEntries(inputIds.map(function (id) { return [id, document.getElementById(id).value]; })),
           identificacion: el.identificacion.value,
           fechaClase: el.fechaClase.value,
@@ -1719,18 +1746,9 @@
           adminMode: state.adminMode,
           state: state
         };
-        localStorage.setItem("controlAsistenciaDocenteFagori", JSON.stringify(payload));
-        alert("Borrador guardado en este navegador.");
       }
 
-      function cargarLocal() {
-        const raw = localStorage.getItem("controlAsistenciaDocenteFagori");
-        if (!raw) {
-          alert("No existe un borrador guardado en este navegador.");
-          return;
-        }
-        const data = JSON.parse(raw);
-
+      function restoreFromData(data) {
         inputIds.forEach(function (id) {
           if (data.campos && Object.prototype.hasOwnProperty.call(data.campos, id)) {
             document.getElementById(id).value = data.campos[id];
@@ -1740,21 +1758,52 @@
         el.fechaClase.value = data.fechaClase || el.fechaClase.value;
         el.fechaReapertura.value = data.fechaReapertura || el.fechaReapertura.value;
         el.motivoReapertura.value = data.motivoReapertura || "";
-        el.selectorHorario.value = data.selectorHorario || el.selectorHorario.value || "0";
+        el.selectorHorario.value = data.selectorHorario || "0";
         el.tipoRegistro.value = data.tipoRegistro || "normal";
         el.justificacion.value = data.justificacion || "";
         state.adminMode = Boolean(data.adminMode);
         el.adminModeSelect.value = state.adminMode ? "on" : "off";
-
         if (data.state && typeof data.state === "object") {
           state.rows = Array.isArray(data.state.rows) ? data.state.rows : [];
           state.history = Array.isArray(data.state.history) ? data.state.history : [];
           state.reopenedDates = Array.isArray(data.state.reopenedDates) ? data.state.reopenedDates : [];
         }
-
         syncPreview();
         renderTable();
-        alert("Borrador cargado desde este navegador.");
+      }
+
+      function autoGuardar() {
+        try {
+          localStorage.setItem("controlAsistenciaDocenteFagori", JSON.stringify(buildPayload()));
+        } catch (e) {}
+      }
+
+      function autoCargar() {
+        const raw = localStorage.getItem("controlAsistenciaDocenteFagori");
+        if (!raw) return false;
+        try {
+          restoreFromData(JSON.parse(raw));
+          return true;
+        } catch (e) { return false; }
+      }
+
+      function guardarLocal() {
+        localStorage.setItem("controlAsistenciaDocenteFagori", JSON.stringify(buildPayload()));
+        alert("Borrador guardado en este navegador.");
+      }
+
+      function cargarLocal() {
+        const raw = localStorage.getItem("controlAsistenciaDocenteFagori");
+        if (!raw) {
+          alert("No existe un borrador guardado en este navegador.");
+          return;
+        }
+        try {
+          restoreFromData(JSON.parse(raw));
+          alert("Borrador cargado desde este navegador.");
+        } catch (e) {
+          alert("Error al leer el borrador guardado.");
+        }
       }
 
       function downloadFile(filename, content, type) {
@@ -1905,7 +1954,9 @@
         window.addEventListener("resize", resizeCanvas);
         resizeCanvas();
         enableAdminMode();
-        cargarDesdeSelector();
+        if (!autoCargar()) {
+          cargarDesdeSelector();
+        }
       }
 
       start();
