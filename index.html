@@ -971,6 +971,7 @@
           el.tablaControlBody.appendChild(tr);
         });
         renderHistory();
+        runTests();
       }
 
       function addHistory(tipo, fechaClase, detalle) {
@@ -992,7 +993,6 @@
         el.periodo.value = item.periodo;
         el.nivel.value = item.nivel;
         el.grupo.value = item.grupo;
-        el.cupo.value = item.cupo;
         el.codigoMateria.value = item.codigoMateria;
         el.materia.value = item.materia;
 
@@ -1292,7 +1292,6 @@
         lines.push("Código asignatura: " + el.codigoMateria.value);
         lines.push("Grupo: " + el.grupo.value);
         lines.push("Nivel: " + el.nivel.value);
-        lines.push("Cupo: " + el.cupo.value);
         lines.push("Horario: " + el.dia.value + " " + el.horaInicio.value + " a " + el.horaFin.value);
         lines.push("Aula: " + el.aula.value);
         lines.push("Rango: " + el.rango.value);
@@ -1316,7 +1315,7 @@
       function updateInputListeners() {
         const fields = [
           el.docente, el.identificacion, el.programa, el.periodo, el.nivel,
-          el.grupo, el.cupo, el.codigoMateria, el.materia, el.dia,
+          el.grupo, el.codigoMateria, el.materia, el.dia,
           el.horaInicio, el.horaFin, el.aula, el.rango
         ];
         fields.forEach(function (field) {
@@ -1326,6 +1325,29 @@
 
       function enableAdminMode() {
         state.adminMode = el.adminModeSelect.value === "on";
+        runTests();
+      }
+
+      function runTests() {
+        const checks = [];
+        const totalRows = state.rows.length;
+        const signed = state.rows.filter(function (r) { return r.firma; }).length;
+        const locked = state.rows.filter(function (r) { return r.estado === "locked" && !r.firma; }).length;
+        const pending = state.rows.filter(function (r) { return r.estado === "pending"; }).length;
+        const open = state.rows.filter(function (r) { return r.estado === "open"; }).length;
+        const withJust = state.rows.filter(function (r) { return r.firma && r.observacion && r.observacion !== "Registro dentro de la fecha programada."; }).length;
+
+        checks.push((totalRows > 0 ? "✔" : "✖") + " Cronograma generado: " + totalRows + " fecha(s)");
+        checks.push((el.docente.value ? "✔" : "✖") + " Docente cargado: " + (el.docente.value || "—"));
+        checks.push((el.codigoMateria.value ? "✔" : "✖") + " Código asignatura: " + (el.codigoMateria.value || "—"));
+        checks.push("ℹ Firmas registradas: " + signed + " / " + totalRows);
+        checks.push("ℹ Fechas disponibles hoy: " + open);
+        checks.push("ℹ Fechas pendientes (futuras): " + pending);
+        checks.push("ℹ Fechas cerradas sin firma: " + locked);
+        checks.push("ℹ Registros con justificación: " + withJust);
+        checks.push((state.adminMode ? "⚠ Modo administración HABILITADO" : "✔ Modo administración bloqueado"));
+
+        el.testResults.innerHTML = checks.map(function (c) { return "<li>" + c + "</li>"; }).join("");
       }
 
       function start() {
