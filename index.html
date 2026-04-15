@@ -548,11 +548,16 @@
       <h2 class="section-title" style="margin-top:18px;">Firma del docente</h2>
       <div class="sig-wrap">
         <canvas id="signaturePad"></canvas>
-        <p class="small">La firma solo se inserta en una fecha válida del cronograma o en modo de ajuste con justificación.</p>
+        <p class="small" style="margin-top:6px;">
+          Dibuje la firma con el cursor · Pegue una imagen con <strong>Ctrl+V</strong> · O use "Cargar imagen".<br>
+          La firma solo se registra en una fecha válida del cronograma o en modo de ajuste con justificación.
+        </p>
       </div>
+      <input type="file" id="inputFirmaImagen" accept="image/*" style="display:none;" />
 
       <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
         <button class="btn-primary" id="btnSign">Registrar firma en la fecha</button>
+        <button id="btnLoadImage">Cargar imagen</button>
         <button id="btnAddManual">Agregar fila manual</button>
         <button id="btnRebuild">Regenerar cronograma</button>
       </div>
@@ -1612,6 +1617,26 @@
         signaturePadHasDrawn = false;
       }
 
+      function pegarImagenEnCanvas(src) {
+        const img = new Image();
+        img.onload = function () {
+          const rect = sigCanvas.getBoundingClientRect();
+          const canvasW = rect.width;
+          const canvasH = rect.height;
+          const padding = 8;
+          const scale = Math.min((canvasW - padding * 2) / img.width, (canvasH - padding * 2) / img.height, 1);
+          const drawW = img.width * scale;
+          const drawH = img.height * scale;
+          const offsetX = (canvasW - drawW) / 2;
+          const offsetY = (canvasH - drawH) / 2;
+          sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+          sigCtx.drawImage(img, offsetX, offsetY, drawW, drawH);
+          signaturePadHasDrawn = true;
+          URL.revokeObjectURL(src);
+        };
+        img.src = src;
+      }
+
       function obtenerFirmaData() {
         if (!signaturePadHasDrawn) return "";
         return sigCanvas.toDataURL("image/png");
@@ -1851,6 +1876,31 @@
         sigCanvas.addEventListener("touchstart", startDraw);
         sigCanvas.addEventListener("touchmove", draw);
         sigCanvas.addEventListener("touchend", endDraw);
+
+        document.addEventListener("paste", function (evt) {
+          const active = document.activeElement;
+          if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA" || active.tagName === "SELECT")) return;
+          const items = evt.clipboardData && evt.clipboardData.items;
+          if (!items) return;
+          for (var i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf("image") !== -1) {
+              pegarImagenEnCanvas(URL.createObjectURL(items[i].getAsFile()));
+              evt.preventDefault();
+              break;
+            }
+          }
+        });
+
+        document.getElementById("inputFirmaImagen").addEventListener("change", function () {
+          var file = this.files[0];
+          if (!file || !file.type.startsWith("image/")) return;
+          pegarImagenEnCanvas(URL.createObjectURL(file));
+          this.value = "";
+        });
+
+        document.getElementById("btnLoadImage").addEventListener("click", function () {
+          document.getElementById("inputFirmaImagen").click();
+        });
 
         window.addEventListener("resize", resizeCanvas);
         resizeCanvas();
