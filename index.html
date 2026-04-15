@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONTROL DE ASISTENCIA DOCENTE</title>
+  <style>
+    :root {
+      --primary: #0d3b8c;
+      --primary-dark: #082a63;
+      --primary-soft: #eef4ff;
+      --gold: #d39a2c;
+      --gold-soft: #fff7e8;
+      --border: #d6deea;
+      --text: #172033;
+      --muted: #5f6b7a;
+      --ok: #0f9d58;
+      --warn: #c27c00;
+      --danger: #c62828;
+      --bg: #f5f7fb;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 18px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    button, select, input, textarea { font: inherit; }
+
+    button {
+      border: 1px solid var(--border);
+      background: var(--white);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    button:hover { background: #f7f9fc; }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover { filter: brightness(0.95); }
+
+    .page {
+      max-width: 1320px;
+      margin: 20px auto;
+      padding: 0 16px 40px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+    }
+
+    .panel, .sheet {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(16, 24, 40, 0.05);
+    }
+
+    .panel {
+      padding: 18px;
+      align-self: start;
+      position: sticky;
+      top: 72px;
+      max-height: calc(100vh - 92px);
+      overflow: auto;
+    }
+
+    .sheet {
+      padding: 28px;
+      background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      color: var(--primary);
+      margin: 0 0 10px;
+    }
+
+    .grid-2, .grid-3, .grid-4 {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .field input, .field select, .field textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: white;
+    }
+
+    .field textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .header-sheet {
+      display: grid;
+      grid-template-columns: 280px 1fr 190px;
+      gap: 18px;
+      align-items: center;
+      border-bottom: 3px solid #dbe5f5;
+      padding: 0 0 18px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .header-sheet::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -28px;
+      height: 8px;
+      background: linear-gradient(90deg, var(--primary-dark), var(--primary), var(--gold));
+      border-radius: 16px 16px 0 0;
+    }
+
+    .logo {
+      border: 1px solid #d8e1ef;
+      border-radius: 16px;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 10px 14px;
+      background: linear-gradient(180deg, #ffffff 0%, #f7faff 100%);
+    }
+
+    .logo img {
+      max-width: 100%;
+      max-height: 78px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .header-title h1 {
+      margin: 0;
+      font-size: 26px;
+      text-transform: uppercase;
+      color: var(--primary-dark);
+      letter-spacing: .02em;
+    }
+
+    .header-title p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .header-title .subline {
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: var(--gold-soft);
+      color: #8b5c00;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid #f0dfb5;
+    }
+
+    .meta-box {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      font-size: 12px;
+    }
+
+    .meta-box div {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .meta-box div:last-child { border-bottom: none; }
+
+    .data-block {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px 18px;
+      margin-bottom: 18px;
+    }
+
+    .item {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 13px;
+      min-height: 66px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+    }
+
+    .item .k {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .item .v {
+      font-size: 14px;
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    .notice {
+      background: linear-gradient(90deg, var(--primary-soft), #f8fbff);
+      border: 1px solid #d7e2ff;
+      color: var(--primary-dark);
+      padding: 13px 15px;
+      border-radius: 14px;
+      margin-bottom: 18px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 13px;
+    }
+
+    th, td {
+      border: 1px solid #bcc8da;
+      padding: 8px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    th {
+      background: linear-gradient(180deg, #edf3ff 0%, #e8eefb 100%);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: .02em;
+    }
+
+    td.left { text-align: left; }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      min-width: 110px;
+    }
+
+    .status-pending { background: #f1f5f9; color: #475569; }
+    .status-open { background: #ecfdf3; color: var(--ok); }
+    .status-late { background: #fff7e6; color: var(--warn); }
+    .status-signed { background: #e8f5e9; color: #1b5e20; }
+    .status-locked { background: #ffebee; color: var(--danger); }
+
+    .sig-wrap {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      background: #fbfcfe;
+    }
+
+    canvas {
+      width: 100%;
+      height: 180px;
+      border: 1px dashed #9fb0cb;
+      border-radius: 12px;
+      background: white;
+      touch-action: none;
+    }
+
+    .small {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .history-box {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-top: 14px;
+    }
+
+    .history-box table { margin: 0; }
+
+    .signature-preview {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .firma-img {
+      max-height: 42px;
+      max-width: 100%;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .footer-signs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .footer-signs .line {
+      border-top: 1px solid #2f3b52;
+      padding-top: 8px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .test-box {
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fafcff;
+      font-size: 12px;
+    }
+
+    .test-box ul {
+      margin: 8px 0 0 18px;
+      padding: 0;
+    }
+
+    .hidden-print { display: block; }
+
+    @media (max-width: 1100px) {
+      .page { grid-template-columns: 1fr; }
+      .panel { position: static; max-height: none; }
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 760px) {
+      .header-sheet, .grid-2, .grid-3, .grid-4, .data-block, .footer-signs {
+        grid-template-columns: 1fr;
+      }
+      .sheet { padding: 16px; }
+    }
+
+    @media print {
+      body { background: white; }
+      .topbar, .panel, .hidden-print { display: none !important; }
+      .page { display: block; margin: 0; padding: 0; max-width: 100%; }
+      .sheet { box-shadow: none; border: none; border-radius: 0; padding: 0; }
+      table { font-size: 11px; }
+      th, td { padding: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar hidden-print">
+    <button class="btn-primary" id="btnPrint">Imprimir / Exportar PDF</button>
+    <button id="btnSave">Guardar borrador</button>
+    <button id="btnLoad">Cargar borrador</button>
+    <button id="btnExportJson">Exportar historial JSON</button>
+    <button id="btnClearSign">Limpiar firma</button>
+    <button id="btnLoadSchedule">Cargar desde horario</button>
+  </div>
+
+  <div class="page">
+    <aside class="panel hidden-print">
+      <h2 class="section-title">Configuración del control</h2>
+
+      <div class="notice" style="margin-bottom:14px;">
+        Seleccione un registro del horario y el sistema cargará automáticamente docente, asignatura, código, grupo y sesiones de clase.
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Registro del horario</label>
+          <select id="selectorHorario"></select>
+        </div>
+        <div class="field">
+          <label>Modo de administración</label>
+          <select id="adminModeSelect">
+            <option value="off">Bloqueado</option>
+            <option value="on">Habilitado</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Fecha a reabrir</label>
+          <input id="fechaReapertura" type="date" />
+        </div>
+        <div class="field">
+          <label>Motivo de reapertura</label>
+          <input id="motivoReapertura" placeholder="Festivo, contingencia, error de registro, etc." />
+        </div>
+      </div>
+
+      <div style="margin:4px 0 18px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button id="btnReopen">Reabrir fecha</button>
+        <button id="btnExportTxt">Exportar resumen TXT</button>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Docente</label>
+          <input id="docente" value="ANGIE JULIETH ARENAS PIEDRAHITA" />
+        </div>
+        <div class="field">
+          <label>Identificación del docente</label>
+          <input id="identificacion" placeholder="Número de identificación" />
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Programa</label>
+          <input id="programa" value="13010 GOBIERNO Y RELACIONES INTERNACIONALES - JORNADA DIURNA" />
+        </div>
+        <div class="field">
+          <label>Periodo</label>
+          <input id="periodo" value="20261" />
+        </div>
+      </div>
+
+      <div class="grid-4">
+        <div class="field">
+          <label>Nivel</label>
+          <input id="nivel" value="6" />
+        </div>
+        <div class="field">
+          <label>Grupo</label>
+          <input id="grupo" value="DA6A" />
+        </div>
+        <div class="field">
+          <label>Cupo</label>
+          <input id="cupo" value="11" />
+        </div>
+        <div class="field">
+          <label>Código asignatura</label>
+          <input id="codigoMateria" value="13970" />
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:16px;">
+        <label>Espacio académico</label>
+        <input id="materia" value="ANÁLISIS Y SISTEMAS DE INFORMACIÓN" />
+      </div>
+
+      <div class="grid-3">
+        <div class="field">
+          <label>Día</label>
+          <select id="dia">
+            <option value="Lun">Lunes</option>
+            <option value="Mar">Martes</option>
+            <option value="Mie">Miércoles</option>
+            <option value="Jue" selected>Jueves</option>
+            <option value="Vie">Viernes</option>
+            <option value="Sab">Sábado</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Hora inicio</label>
+          <input id="horaInicio" value="9:00 am" />
+        </div>
+        <div class="field">
+          <label>Hora fin</label>
+          <input id="horaFin" value="12:00 pm" />
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Aula</label>
+          <input id="aula" value="LABORATORIO DE SISTEMAS 408 - EDIF. DOCTOR ANGELICO" />
+        </div>
+        <div class="field">
+          <label>Rango de fechas de clase</label>
+          <input id="rango" value="05/02/2026 - 28/05/2026" />
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Fecha habilitada para firmar</label>
+          <input id="fechaClase" type="date" />
+        </div>
+        <div class="field">
+          <label>Tipo de registro</label>
+          <select id="tipoRegistro">
+            <option value="normal">Firma normal</option>
+            <option value="ajuste">Firma posterior con justificación</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Justificación de ajuste o novedad</label>
+        <textarea id="justificacion" placeholder="Use este campo cuando la firma se registre posteriormente, exista un festivo, cambio de aula, novedad de horario o alguna incidencia."></textarea>
+      </div>
+
+      <h2 class="section-title" style="margin-top:18px;">Firma del docente</h2>
+      <div class="sig-wrap">
+        <canvas id="signaturePad"></canvas>
+        <p class="small">La firma solo se inserta en una fecha válida del cronograma o en modo de ajuste con justificación.</p>
+      </div>
+
+      <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn-primary" id="btnSign">Registrar firma en la fecha</button>
+        <button id="btnAddManual">Agregar fila manual</button>
+        <button id="btnRebuild">Regenerar cronograma</button>
+      </div>
+
+      <div class="test-box">
+        <strong>Autoverificación:</strong>
+        <ul id="testResults"></ul>
+      </div>
+    </aside>
+
+    <main class="sheet" id="sheetToPrint">
+      <div class="header-sheet">
+        <div class="logo">
+          <img alt="Universidad Santo Tomás Bogotá" src="/mnt/data/LOGO SANTOTO BOGOTÁ-COLOR.png" onerror="this.style.display='none'; this.parentNode.textContent='Logo institucional';" />
+        </div>
+        <div class="header-title">
+          <h1>Control de asistencia docente por fecha</h1>
+          <p>Facultad de Gobierno y Relaciones Internacionales · Formato editable, institucional y exportable</p>
+          <div class="subline">Universidad Santo Tomás · Sede Principal Bogotá</div>
+        </div>
+        <div class="meta-box">
+          <div><strong>Código formato:</strong> CAD-FAGORI-001</div>
+          <div><strong>Versión:</strong> 1.1</div>
+          <div><strong>Generado:</strong> <span id="fechaGeneracion"></span></div>
+        </div>
+      </div>
+
+      <div class="notice">
+        Este control permite registrar asistencia por fecha de clase, asociar firma manuscrita digital, dejar trazabilidad de ajustes y exportar el resultado para archivo institucional o impresión.
+      </div>
+
+      <div class="notice" style="margin-top:-4px; background:linear-gradient(90deg,#fff8ea,#fffdf7); color:#6f4a00; border-color:#f1ddb2;">
+        Recomendación operativa: este formato está preparado para evolucionar a una versión con autenticación por docente, control de reaperturas, firma con justificación y consolidado por asignatura, grupo o período.
+      </div>
+
+      <div class="data-block">
+        <div class="item"><span class="k">Docente</span><span class="v" id="vDocente"></span></div>
+        <div class="item"><span class="k">Identificación</span><span class="v" id="vIdentificacion"></span></div>
+        <div class="item"><span class="k">Programa</span><span class="v" id="vPrograma"></span></div>
+        <div class="item"><span class="k">Periodo</span><span class="v" id="vPeriodo"></span></div>
+        <div class="item"><span class="k">Espacio académico</span><span class="v" id="vMateria"></span></div>
+        <div class="item"><span class="k">Código asignatura</span><span class="v" id="vCodigo"></span></div>
+        <div class="item"><span class="k">Grupo</span><span class="v" id="vGrupo"></span></div>
+        <div class="item"><span class="k">Nivel</span><span class="v" id="vNivel"></span></div>
+        <div class="item"><span class="k">Cupo</span><span class="v" id="vCupo"></span></div>
+        <div class="item"><span class="k">Horario</span><span class="v" id="vHorario"></span></div>
+        <div class="item"><span class="k">Aula</span><span class="v" id="vAula"></span></div>
+        <div class="item"><span class="k">Rango de fechas</span><span class="v" id="vRango"></span></div>
+      </div>
+
+      <table id="tablaControl">
+        <thead>
+          <tr>
+            <th style="width:5%;">#</th>
+            <th style="width:11%;">Fecha clase</th>
+            <th style="width:8%;">Día</th>
+            <th style="width:10%;">Hora</th>
+            <th style="width:18%;">Aula / espacio</th>
+            <th style="width:12%;">Estado</th>
+            <th style="width:16%;">Firma docente</th>
+            <th style="width:20%;">Justificación / observación</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div class="history-box">
+        <table id="tablaHistorial">
+          <thead>
+            <tr>
+              <th style="width:5%;">#</th>
+              <th style="width:12%;">Fecha registro</th>
+              <th style="width:10%;">Tipo</th>
+              <th style="width:12%;">Fecha clase</th>
+              <th style="width:12%;">Hora sistema</th>
+              <th>Detalle</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="footer-signs">
+        <div class="line">Revisión / Secretaría Académica</div>
+        <div class="line">Docente</div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const datasetHorario = [
+        {
+          docente: "ANGIE JULIETH ARENAS PIEDRAHITA",
+          identificacion: "",
+          programa: "13010 GOBIERNO Y RELACIONES INTERNACIONALES - JORNADA DIURNA",
+          periodo: "20261",
+          nivel: "6",
+          grupo: "DA6A",
+          cupo: "11",
+          codigoMateria: "13970",
+          materia: "ANÁLISIS Y SISTEMAS DE INFORMACIÓN",
+          sesiones: [
+            { dia: "Mar", horaInicio: "9:00 am", horaFin: "12:00 pm", aula: "LABORATORIO DE SISTEMAS 408 - EDIF. DOCTOR ANGELICO", rango: "03/02/2026 - 26/05/2026" },
+            { dia: "Jue", horaInicio: "9:00 am", horaFin: "12:00 pm", aula: "LABORATORIO DE SISTEMAS 408 - EDIF. DOCTOR ANGELICO", rango: "05/02/2026 - 28/05/2026" }
+          ]
+        },
+        {
+          docente: "ESPINEL TORRES YEILOR RAFAEL",
+          identificacion: "",
+          programa: "13010 GOBIERNO Y RELACIONES INTERNACIONALES - JORNADA DIURNA",
+          periodo: "20261",
+          nivel: "3",
+          grupo: "DA3A",
+          cupo: "1",
+          codigoMateria: "13956",
+          materia: "GOBERNABILIDAD Y POLÍTICAS PÚBLICAS",
+          sesiones: [
+            { dia: "Mar", horaInicio: "2:00 pm", horaFin: "4:00 pm", aula: "AULA 709 - EDIF. DOCTOR ANGELICO", rango: "03/02/2026 - 26/05/2026" },
+            { dia: "Vie", horaInicio: "2:00 pm", horaFin: "4:00 pm", aula: "AULA 505 - EDIF. DOCTOR ANGELICO", rango: "06/02/2026 - 29/05/2026" }
+          ]
+        },
+        {
+          docente: "CHAVES GARCIA CARLOS ALBERTO",
+          identificacion: "",
+          programa: "13010 GOBIERNO Y RELACIONES INTERNACIONALES - JORNADA DIURNA",
+          periodo: "20261",
+          nivel: "3",
+          grupo: "DA3A",
+          cupo: "4",
+          codigoMateria: "13186",
+          materia: "TEORÍA DE LAS RELACIONES INTERNACIONALES",
+          sesiones: [
+            { dia: "Mie", horaInicio: "7:00 am", horaFin: "10:00 am", aula: "AULA 602 - EDIF. DOCTOR ANGELICO", rango: "04/02/2026 - 27/05/2026" }
+          ]
+        }
+      ];
+
+      const inputIds = [
+        "docente", "identificacion", "programa", "periodo", "nivel", "grupo", "cupo", "codigoMateria", "materia", "dia", "horaInicio", "horaFin", "aula", "rango"
+      ];
+
+      const state = {
+        rows: [],
+        history: [],
+        reopenedDates: [],
+        adminMode: false
+      };
+
+      const el = {
+        fechaGeneracion: document.getElementById("fechaGeneracion"),
+        selectorHorario: document.getElementById("selectorHorario"),
+        adminModeSelect: document.getElementById("adminModeSelect"),
+        fechaReapertura: document.getElementById("fechaReapertura"),
+        motivoReapertura: document.getElementById("motivoReapertura"),
+        docente: document.getElementById("docente"),
+        identificacion: document.getElementById("identificacion"),
+        programa: document.getElementById("programa"),
+        periodo: document.getElementById("periodo"),
+        nivel: document.getElementById("nivel"),
+        grupo: document.getElementById("grupo"),
+        cupo: document.getElementById("cupo"),
+        codigoMateria: document.getElementById("codigoMateria"),
+        materia: document.getElementById("materia"),
+        dia: document.getElementById("dia"),
+        horaInicio: document.getElementById("horaInicio"),
+        horaFin: document.getElementById("horaFin"),
+        aula: document.getElementById("aula"),
+        rango: document.getElementById("rango"),
+        fechaClase: document.getElementById("fechaClase"),
+        tipoRegistro: document.getElementById("tipoRegistro"),
+        justificacion: document.getElementById("justificacion"),
+        tablaControlBody: document.querySelector("#tablaControl tbody"),
+        tablaHistorialBody: document.querySelector("#tablaHistorial tbody"),
+        vDocente: document.getElementById("vDocente"),
+        vIdentificacion: document.getElementById("vIdentificacion"),
+        vPrograma: document.getElementById("vPrograma"),
+        vPeriodo: document.getElementById("vPeriodo"),
+        vMateria: document.getElementById("vMateria"),
+        vCodigo: document.getElementById("vCodigo"),
+        vGrupo: document.getElementById("vGrupo"),
+        vNivel: document.getElementById("vNivel"),
+        vCupo: document.getElementById("vCupo"),
+        vHorario: document.getElementById("vHorario"),
+        vAula: document.getElementById("vAula"),
+        vRango: document.getElementById("vRango"),
+        signaturePad: document.getElementById("signaturePad"),
+        testResults: document.getElementById("testResults")
+      };
+
+      const today = new Date();
+      el.fechaGeneracion.textContent = today.toLocaleDateString("es-CO");
+
+      function safeUUID() {
+        if (window.crypto && typeof window.crypto.randomUUID === "function") {
+          return window.crypto.randomUUID();
+        }
+        return "id-" + Date.now() + "-" + Math.random().toString(16).slice(2);
+      }
+
+      function setDefaultDates() {
+        const now = new Date();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
+        const iso = now.getFullYear() + "-" + month + "-" + day;
+        el.fechaClase.value = iso;
+        el.fechaReapertura.value = iso;
+      }
+
+      function fillHorarioSelector() {
+        el.selectorHorario.innerHTML = "";
+        datasetHorario.forEach(function (item, index) {
+          const option = document.createElement("option");
+          option.value = String(index);
+          option.textContent = item.codigoMateria + " · " + item.materia + " · " + item.grupo + " · " + item.docente;
+          el.selectorHorario.appendChild(option);
+        });
+      }
+
+      function syncPreview() {
+        el.vDocente.textContent = el.docente.value || "-";
+        el.vIdentificacion.textContent = el.identificacion.value || "-";
+        el.vPrograma.textContent = el.programa.value || "-";
+        el.vPeriodo.textContent = el.periodo.value || "-";
+        el.vMateria.textContent = el.materia.value || "-";
+        el.vCodigo.textContent = el.codigoMateria.value || "-";
+        el.vGrupo.textContent = el.grupo.value || "-";
+        el.vNivel.textContent = el.nivel.value || "-";
+        el.vCupo.textContent = el.cupo.value || "-";
+        el.vHorario.textContent = el.dia.value + " · " + el.horaInicio.value + " a " + el.horaFin.value;
+        el.vAula.textContent = el.aula.value || "-";
+        el.vRango.textContent = el.rango.value || "-";
+      }
+
+      function parseDMY(text) {
+        const parts = text.split("/").map(Number);
+        if (parts.length !== 3 || parts.some(Number.isNaN)) return null;
+        return new Date(parts[2], parts[1] - 1, parts[0], 12, 0, 0);
+      }
+
+      function formatISOToDMY(iso) {
+        const parts = iso.split("-");
+        if (parts.length !== 3) return iso;
+        return parts[2] + "/" + parts[1] + "/" + parts[0];
+      }
+
+      function getRangoFechas(rawValue) {
+        const raw = rawValue || el.rango.value;
+        const parts = raw.split("-").map(function (v) { return v.trim(); });
+        if (parts.length < 2) return null;
+        const inicio = parseDMY(parts[0]);
+        const fin = parseDMY(parts[1]);
+        if (!inicio || !fin) return null;
+        return { inicio: inicio, fin: fin };
+      }
+
+      function dayMap(code) {
+        const map = { Lun: 1, Mar: 2, Mie: 3, Jue: 4, Vie: 5, Sab: 6, Dom: 0 };
+        return map[code];
+      }
+
+      function buildSessionRows(session, sourceLabel) {
+        const rango = getRangoFechas(session.rango);
+        if (!rango) return [];
+        const targetDay = dayMap(session.dia);
+        if (typeof targetDay !== "number") return [];
+
+        const current = new Date(rango.inicio);
+        const rows = [];
+
+        while (current.getDay() !== targetDay && current <= rango.fin) {
+          current.setDate(current.getDate() + 1);
+        }
+
+        while (current <= rango.fin) {
+          const month = String(current.getMonth() + 1).padStart(2, "0");
+          const day = String(current.getDate()).padStart(2, "0");
+          const iso = current.getFullYear() + "-" + month + "-" + day;
+          rows.push({
+            id: safeUUID(),
+            fechaISO: iso,
+            fechaDMY: formatISOToDMY(iso),
+            dia: session.dia,
+            hora: session.horaInicio + " a " + session.horaFin,
+            aula: session.aula,
+            estado: "pending",
+            firma: "",
+            observacion: "",
+            sourceLabel: sourceLabel
+          });
+          current.setDate(current.getDate() + 7);
+        }
+
+        return rows;
+      }
+
+      function reevaluarEstados() {
+        const todayDate = new Date();
+        todayDate.setHours(12, 0, 0, 0);
+
+        state.rows.forEach(function (row) {
+          if (row.firma) return;
+          const d = new Date(row.fechaISO + "T12:00:00");
+          const reopened = state.reopenedDates.includes(row.fechaISO);
+          if (reopened) row.estado = "open";
+          else if (d.getTime() === todayDate.getTime()) row.estado = "open";
+          else if (d < todayDate) row.estado = "locked";
+          else row.estado = "pending";
+        });
+      }
+
+      function estadoBadge(status) {
+        const map = {
+          pending: ["Pendiente", "status status-pending"],
+          open: ["Disponible", "status status-open"],
+          late: ["Firmado con ajuste", "status status-late"],
+          signed: ["Firmado", "status status-signed"],
+          locked: ["Cerrado", "status status-locked"]
+        };
+        const item = map[status] || map.pending;
+        return '<span class="' + item[1] + '">' + item[0] + '</span>';
+      }
+
+      function renderHistory() {
+        el.tablaHistorialBody.innerHTML = "";
+        state.history.forEach(function (item, i) {
+          const tr = document.createElement("tr");
+          tr.innerHTML =
+            "<td>" + (i + 1) + "</td>" +
+            "<td>" + item.fechaRegistro + "</td>" +
+            "<td>" + item.tipo + "</td>" +
+            "<td>" + item.fechaClase + "</td>" +
+            "<td>" + item.horaSistema + "</td>" +
+            '<td class="left">' + item.detalle + "</td>";
+          el.tablaHistorialBody.appendChild(tr);
+        });
+      }
+
+      function renderTable() {
+        el.tablaControlBody.innerHTML = "";
+        reevaluarEstados();
+        state.rows.forEach(function (row, i) {
+          const firmaHtml = row.firma
+            ? '<img src="' + row.firma + '" alt="Firma docente" class="firma-img" />'
+            : "Sin firma";
+          const tr = document.createElement("tr");
+          tr.innerHTML =
+            "<td>" + (i + 1) + "</td>" +
+            "<td>" + row.fechaDMY + "</td>" +
+            "<td>" + row.dia + "</td>" +
+            "<td>" + row.hora + "</td>" +
+            '<td class="left">' + row.aula + "</td>" +
+            "<td>" + estadoBadge(row.estado) + "</td>" +
+            '<td><div class="signature-preview">' + firmaHtml + "</div></td>" +
+            '<td class="left">' + (row.observacion || "-") + "</td>";
+          el.tablaControlBody.appendChild(tr);
+        });
+        renderHistory();
+      }
+
+      function addHistory(tipo, fechaClase, detalle) {
+        state.history.unshift({
+          fechaRegistro: new Date().toLocaleDateString("es-CO"),
+          tipo: tipo,
+          fechaClase: fechaClase,
+          horaSistema: new Date().toLocaleTimeString("es-CO"),
+          detalle: detalle
+        });
+        renderHistory();
+      }
+
+      function cargarDesdeSelector() {
+        const item = datasetHorario[Number(el.selectorHorario.value)] || datasetHorario[0];
+        el.docente.value = item.docente;
+        el.identificacion.value = item.identificacion || "";
+        el.programa.value = item.programa;
+        el.periodo.value = item.periodo;
+        el.nivel.value = item.nivel;
+        el.grupo.value = item.grupo;
+        el.cupo.value = item.cupo;
+        el.codigoMateria.value = item.codigoMateria;
+        el.materia.value = item.materia;
+
+        const firstSession = item.sesiones[0];
+        el.dia.value = firstSession.dia;
+        el.horaInicio.value = firstSession.horaInicio;
+        el.horaFin.value = firstSession.horaFin;
+        el.aula.value = firstSession.aula;
+        el.rango.value = firstSession.rango;
+
+        state.rows = item.sesiones.flatMap(function (s) {
+          return buildSessionRows(s, item.codigoMateria + "-" + item.grupo);
+        });
+        state.rows.sort(function (a, b) {
+          return a.fechaISO.localeCompare(b.fechaISO) || a.dia.localeCompare(b.dia);
+        });
+        state.history = [];
+        state.reopenedDates = [];
+        syncPreview();
+        addHistory("Carga automática", "-", "Se cargó el horario de " + item.codigoMateria + " · " + item.materia + " · " + item.grupo + ".");
+        renderTable();
+      }
+
+      function addWeeksSchedule() {
+        const session = {
+          dia: el.dia.value,
+          horaInicio: el.horaInicio.value,
+          horaFin: el.horaFin.value,
+          aula: el.aula.value,
+          rango: el.rango.value
+        };
+        state.rows = buildSessionRows(session, "manual");
+        reevaluarEstados();
+        renderTable();
+        addHistory("Carga inicial", "-", "Se generó el cronograma base a partir del rango de fechas.");
+      }
+
+      function agregarFilaManual() {
+        const iso = el.fechaClase.value;
+        if (!iso) {
+          alert("Seleccione una fecha para agregar la fila manualmente.");
+          return;
+        }
+        if (state.rows.some(function (r) { return r.fechaISO === iso && r.dia === el.dia.value; })) {
+          alert("La fecha ya existe en el control para ese día.");
+          return;
+        }
+        state.rows.push({
+          id: safeUUID(),
+          fechaISO: iso,
+          fechaDMY: formatISOToDMY(iso),
+          dia: el.dia.value,
+          hora: el.horaInicio.value + " a " + el.horaFin.value,
+          aula: el.aula.value,
+          estado: "pending",
+          firma: "",
+          observacion: "Fila agregada manualmente.",
+          sourceLabel: "manual"
+        });
+        state.rows.sort(function (a, b) {
+          return a.fechaISO.localeCompare(b.fechaISO) || a.dia.localeCompare(b.dia);
+        });
+        addHistory("Ajuste manual", formatISOToDMY(iso), "Se agregó una fecha adicional al cronograma.");
+        renderTable();
+      }
+
+      function reabrirFecha() {
+        if (!state.adminMode) {
+          alert("Debe habilitar el modo de administración para reabrir una fecha.");
+          return;
+        }
+        const iso = el.fechaReapertura.value;
+        const motivo = el.motivoReapertura.value.trim();
+        if (!iso) {
+          alert("Seleccione la fecha a reabrir.");
+          return;
+        }
+        if (!motivo) {
+          alert("Indique el motivo de reapertura.");
+          return;
+        }
+        const exists = state.rows.some(function (r) { return r.fechaISO === iso; });
+        if (!exists) {
+          alert("La fecha no existe en el cronograma cargado.");
+          return;
+        }
+        if (!state.reopenedDates.includes(iso)) {
+          state.reopenedDates.push(iso);
+        }
+        const row = state.rows.find(function (r) { return r.fechaISO === iso && !r.firma; }) || state.rows.find(function (r) { return r.fechaISO === iso; });
+        if (row && !row.firma) {
+          row.observacion = "Fecha reabierta: " + motivo;
+        }
+        addHistory("Reapertura", formatISOToDMY(iso), motivo);
+        renderTable();
+        alert("Fecha reabierta correctamente.");
+      }
+
+      const sigCanvas = el.signaturePad;
+      const sigCtx = sigCanvas.getContext("2d");
+      let drawing = false;
+      let signaturePadHasDrawn = false;
+
+      function resizeCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        const rect = sigCanvas.getBoundingClientRect();
+        sigCanvas.width = rect.width * ratio;
+        sigCanvas.height = rect.height * ratio;
+        sigCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        sigCtx.lineWidth = 2;
+        sigCtx.lineCap = "round";
+        sigCtx.strokeStyle = "#111827";
+      }
+
+      function pointerPos(evt) {
+        const rect = sigCanvas.getBoundingClientRect();
+        const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+        const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+        return { x: clientX - rect.left, y: clientY - rect.top };
+      }
+
+      function startDraw(evt) {
+        drawing = true;
+        signaturePadHasDrawn = true;
+        const p = pointerPos(evt);
+        sigCtx.beginPath();
+        sigCtx.moveTo(p.x, p.y);
+        evt.preventDefault();
+      }
+
+      function draw(evt) {
+        if (!drawing) return;
+        const p = pointerPos(evt);
+        sigCtx.lineTo(p.x, p.y);
+        sigCtx.stroke();
+        evt.preventDefault();
+      }
+
+      function endDraw() {
+        drawing = false;
+      }
+
+      function limpiarFirma() {
+        sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+        signaturePadHasDrawn = false;
+      }
+
+      function obtenerFirmaData() {
+        if (!signaturePadHasDrawn) return "";
+        return sigCanvas.toDataURL("image/png");
+      }
+
+      function registrarFirma() {
+        const iso = el.fechaClase.value;
+        const tipo = el.tipoRegistro.value;
+        const justificacion = el.justificacion.value.trim();
+        const firma = obtenerFirmaData();
+
+        if (!iso) {
+          alert("Seleccione la fecha de clase.");
+          return;
+        }
+        if (!firma) {
+          alert("Debe ingresar la firma del docente.");
+          return;
+        }
+
+        const row = state.rows.find(function (r) {
+          return r.fechaISO === iso;
+        });
+
+        if (!row) {
+          alert("La fecha no existe en el cronograma. Puede agregarla manualmente si corresponde.");
+          return;
+        }
+
+        const todayDate = new Date();
+        todayDate.setHours(12, 0, 0, 0);
+        const classDate = new Date(iso + "T12:00:00");
+        const isToday = classDate.getTime() === todayDate.getTime();
+        const isPast = classDate < todayDate;
+        const isFuture = classDate > todayDate;
+        const reopened = state.reopenedDates.includes(iso);
+
+        if (isFuture) {
+          alert("No es posible firmar una fecha futura.");
+          return;
+        }
+        if (tipo === "normal" && !isToday && !reopened) {
+          alert("La firma normal solo puede registrarse en la fecha actual o en una fecha reabierta por administración.");
+          return;
+        }
+        if ((tipo === "ajuste" || reopened || isPast) && !justificacion) {
+          alert("Debe diligenciar la justificación para registrar una firma posterior o una fecha reabierta.");
+          return;
+        }
+        if (row.firma && !state.adminMode) {
+          alert("La fecha ya tiene una firma registrada.");
+          return;
+        }
+
+        row.firma = firma;
+        row.observacion = justificacion || "Registro dentro de la fecha programada.";
+        row.estado = (tipo === "ajuste" || isPast || reopened) ? "late" : "signed";
+
+        addHistory(
+          reopened ? "Firma en fecha reabierta" : (tipo === "ajuste" ? "Firma posterior" : "Firma normal"),
+          row.fechaDMY,
+          row.observacion
+        );
+
+        limpiarFirma();
+        renderTable();
+        alert("Firma registrada correctamente.");
+      }
+
+      function guardarLocal() {
+        const payload = {
+          campos: Object.fromEntries(inputIds.map(function (id) { return [id, document.getElementById(id).value]; })),
+          identificacion: el.identificacion.value,
+          fechaClase: el.fechaClase.value,
+          fechaReapertura: el.fechaReapertura.value,
+          motivoReapertura: el.motivoReapertura.value,
+          tipoRegistro: el.tipoRegistro.value,
+          justificacion: el.justificacion.value,
+          selectorHorario: el.selectorHorario.value || "0",
+          adminMode: state.adminMode,
+          state: state
+        };
+        localStorage.setItem("controlAsistenciaDocenteFagori", JSON.stringify(payload));
+        alert("Borrador guardado en este navegador.");
+      }
+
+      function cargarLocal() {
+        const raw = localStorage.getItem("controlAsistenciaDocenteFagori");
+        if (!raw) {
+          alert("No existe un borrador guardado en este navegador.");
+          return;
+        }
+        const data = JSON.parse(raw);
+
+        inputIds.forEach(function (id) {
+          if (data.campos && Object.prototype.hasOwnProperty.call(data.campos, id)) {
+            document.getElementById(id).value = data.campos[id];
+          }
+        });
+        el.identificacion.value = data.identificacion || "";
+        el.fechaClase.value = data.fechaClase || el.fechaClase.value;
+        el.fechaReapertura.value = data.fechaReapertura || el.fechaReapertura.value;
+        el.motivoReapertura.value = data.motivoReapertura || "";
+        el.selectorHorario.value = data.selectorHorario || el.selectorHorario.value || "0";
+        el.tipoRegistro.value = data.tipoRegistro || "normal";
+        el.justificacion.value = data.justificacion || "";
+        state.adminMode = Boolean(data.adminMode);
+        el.adminModeSelect.value = state.adminMode ? "on" : "off";
+
+        if (data.state && typeof data.state === "object") {
+          state.rows = Array.isArray(data.state.rows) ? data.state.rows : [];
+          state.history = Array.isArray(data.state.history) ? data.state.history : [];
+          state.reopenedDates = Array.isArray(data.state.reopenedDates) ? data.state.reopenedDates : [];
+        }
+
+        syncPreview();
+        renderTable();
+        alert("Borrador cargado desde este navegador.");
+      }
+
+      function downloadFile(filename, content, type) {
+        const blob = new Blob([content], { type: type });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+      }
+
+      function exportJson() {
+        const payload = {
+          generado: new Date().toISOString(),
+          campos: Object.fromEntries(inputIds.map(function (id) { return [id, document.getElementById(id).value]; })),
+          state: state
+        };
+        downloadFile("control-asistencia-docente.json", JSON.stringify(payload, null, 2), "application/json;charset=utf-8");
+      }
+
+      function exportTxt() {
+        const lines = [];
+        lines.push("Control de asistencia docente");
+        lines.push("============================");
+        lines.push("Docente: " + el.docente.value);
+        lines.push("Identificación: " + el.identificacion.value);
+        lines.push("Programa: " + el.programa.value);
+        lines.push("Periodo: " + el.periodo.value);
+        lines.push("Asignatura: " + el.materia.value);
+        lines.push("Código asignatura: " + el.codigoMateria.value);
+        lines.push("Grupo: " + el.grupo.value);
+        lines.push("Nivel: " + el.nivel.value);
+        lines.push("Cupo: " + el.cupo.value);
+        lines.push("Horario: " + el.dia.value + " " + el.horaInicio.value + " a " + el.horaFin.value);
+        lines.push("Aula: " + el.aula.value);
+        lines.push("Rango: " + el.rango.value);
+        lines.push("");
+        lines.push("Registros de clase:");
+        state.rows.forEach(function (row, index) {
+          lines.push((index + 1) + ". " + row.fechaDMY + " - " + row.dia + " - " + row.hora + " - " + row.estado + " - " + (row.observacion || "-"));
+        });
+        lines.push("");
+        lines.push("Historial:");
+        state.history.forEach(function (item, index) {
+          lines.push((index + 1) + ". " + item.fechaRegistro + " | " + item.tipo + " | " + item.fechaClase + " | " + item.horaSistema + " | " + item.detalle);
+        });
+        downloadFile("control-asistencia-docente.txt", lines.join("\n"), "text/plain;charset=utf-8");
+      }
+
+      function printControl() {
+        window.print();
+      }
+
+      function updateInputListeners() {
+        const fields = [
+          el.docente, el.identificacion, el.programa, el.periodo, el.nivel,
+          el.grupo, el.cupo, el.codigoMateria, el.materia, el.dia,
+          el.horaInicio, el.horaFin, el.aula, el.rango
+        ];
+        fields.forEach(function (field) {
+          field.addEventListener("input", syncPreview);
+        });
+      }
+
+      function enableAdminMode() {
+        state.adminMode = el.adminModeSelect.value === "on";
+      }
+
+      function start() {
+        fillHorarioSelector();
+        setDefaultDates();
+        updateInputListeners();
+
+        document.getElementById("btnPrint").addEventListener("click", printControl);
+        document.getElementById("btnSave").addEventListener("click", guardarLocal);
+        document.getElementById("btnLoad").addEventListener("click", cargarLocal);
+        document.getElementById("btnExportJson").addEventListener("click", exportJson);
+        document.getElementById("btnExportTxt").addEventListener("click", exportTxt);
+        document.getElementById("btnClearSign").addEventListener("click", limpiarFirma);
+        document.getElementById("btnLoadSchedule").addEventListener("click", cargarDesdeSelector);
+        document.getElementById("btnSign").addEventListener("click", registrarFirma);
+        document.getElementById("btnAddManual").addEventListener("click", agregarFilaManual);
+        document.getElementById("btnRebuild").addEventListener("click", addWeeksSchedule);
+        document.getElementById("btnReopen").addEventListener("click", reabrirFecha);
+
+        el.selectorHorario.addEventListener("change", cargarDesdeSelector);
+        el.adminModeSelect.addEventListener("change", function () {
+          enableAdminMode();
+        });
+
+        sigCanvas.addEventListener("pointerdown", startDraw);
+        sigCanvas.addEventListener("pointermove", draw);
+        sigCanvas.addEventListener("pointerup", endDraw);
+        sigCanvas.addEventListener("pointerleave", endDraw);
+        sigCanvas.addEventListener("touchstart", startDraw);
+        sigCanvas.addEventListener("touchmove", draw);
+        sigCanvas.addEventListener("touchend", endDraw);
+
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+        enableAdminMode();
+        cargarDesdeSelector();
+      }
+
+      start();
+    })();
+  </script>
+</body>
+</html>
