@@ -2525,7 +2525,28 @@
         } catch (e) {}
       }
 
+      function migrarBorradorLegacy() {
+        // Si el usuario actual aún no tiene borrador pero existe uno antiguo
+        // (clave previa sin namespace), se migra para preservar las firmas.
+        const LEGACY_KEY = "controlAsistenciaDocenteFagori";
+        const currentKey = draftKey();
+        if (localStorage.getItem(currentKey)) return;
+        const legacy = localStorage.getItem(LEGACY_KEY);
+        if (!legacy) return;
+        try {
+          const parsed = JSON.parse(legacy);
+          const docenteLegacy = parsed && parsed.campos && parsed.campos.docente;
+          const esAdmin = currentUser && currentUser.role === "admin";
+          const nombreActual = currentUser && currentUser.nombre;
+          // Migrar si es admin (ve todo) o si el borrador antiguo corresponde al mismo docente
+          if (esAdmin || (docenteLegacy && nombreActual && docenteLegacy.trim().toLowerCase() === nombreActual.trim().toLowerCase())) {
+            localStorage.setItem(currentKey, legacy);
+          }
+        } catch (e) { /* ignorar borrador corrupto */ }
+      }
+
       function autoCargar() {
+        migrarBorradorLegacy();
         const raw = localStorage.getItem(draftKey());
         if (!raw) return false;
         try {
@@ -2540,14 +2561,21 @@
       }
 
       function cargarLocal() {
-        const raw = localStorage.getItem(draftKey());
+        migrarBorradorLegacy();
+        let raw = localStorage.getItem(draftKey());
+        let origen = "sesión actual";
+        if (!raw) {
+          // Último recurso: leer el borrador antiguo aunque no corresponda exactamente
+          raw = localStorage.getItem("controlAsistenciaDocenteFagori");
+          origen = "histórico del navegador";
+        }
         if (!raw) {
           alert("No existe un borrador guardado en este navegador.");
           return;
         }
         try {
           restoreFromData(JSON.parse(raw));
-          alert("Borrador cargado desde este navegador.");
+          alert("Borrador cargado (" + origen + ").");
         } catch (e) {
           alert("Error al leer el borrador guardado.");
         }
