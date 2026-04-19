@@ -393,6 +393,290 @@
       .sheet { padding: 16px; }
     }
 
+    /* ===== Login institucional ===== */
+    #loginView {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      overflow: auto;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(211,154,44,0.35), transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(8,42,99,0.55), transparent 55%),
+        linear-gradient(120deg, #082a63, #0d3b8c, #1e5bbf, #d39a2c, #0d3b8c, #082a63);
+      background-size: 200% 200%, 200% 200%, 400% 400%;
+      animation: gradientShift 22s ease-in-out infinite;
+      color: #fff;
+    }
+
+    @keyframes gradientShift {
+      0%   { background-position: 0% 50%, 100% 50%, 0% 50%; }
+      50%  { background-position: 100% 50%, 0% 50%, 100% 50%; }
+      100% { background-position: 0% 50%, 100% 50%, 0% 50%; }
+    }
+
+    .login-wrap {
+      width: 100%;
+      max-width: 1280px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
+      padding: 40px 32px;
+      align-items: center;
+    }
+
+    .login-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 26px;
+      padding-right: 20px;
+    }
+
+    .login-brand .brand-logo {
+      background: rgba(255,255,255,0.96);
+      border-radius: 22px;
+      padding: 22px 28px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+      max-width: 320px;
+    }
+
+    .login-brand .brand-logo img {
+      display: block;
+      max-width: 260px;
+      max-height: 140px;
+      object-fit: contain;
+    }
+
+    .login-brand h1 {
+      margin: 0;
+      font-size: 34px;
+      letter-spacing: .04em;
+      line-height: 1.15;
+      text-transform: uppercase;
+      text-shadow: 0 4px 14px rgba(0,0,0,0.35);
+    }
+
+    .login-brand h1 span {
+      color: var(--gold);
+      display: block;
+      font-size: 22px;
+      letter-spacing: .08em;
+      margin-top: 8px;
+    }
+
+    .login-brand p {
+      margin: 0;
+      max-width: 460px;
+      font-size: 14px;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.88);
+    }
+
+    .login-card {
+      background: rgba(255,255,255,0.97);
+      color: var(--text);
+      border-radius: 20px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+      padding: 30px 30px 24px;
+      backdrop-filter: blur(6px);
+    }
+
+    .login-card h2 {
+      margin: 0 0 4px;
+      color: var(--primary-dark);
+      font-size: 20px;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+    }
+
+    .login-card .sub {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 18px;
+      background: #eef2f9;
+      padding: 4px;
+      border-radius: 12px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(13,59,140,0.25);
+    }
+
+    .login-form .field { margin-bottom: 12px; }
+    .login-form label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 5px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .login-form input, .login-form select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #fff;
+      font: inherit;
+    }
+
+    .login-form .btn-main {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+      color: #fff;
+      border: none;
+      font-weight: 700;
+      letter-spacing: .04em;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .login-form .btn-main:hover { filter: brightness(1.08); }
+
+    .login-msg {
+      font-size: 12px;
+      margin-top: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      min-height: 1em;
+    }
+    .login-msg.ok { background: #e8f5e9; color: #1b5e20; }
+    .login-msg.err { background: #fdecea; color: #b71c1c; }
+
+    .login-hint {
+      margin-top: 14px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .role-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .role-row label {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      border: 1px solid var(--border);
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: none;
+      color: var(--text);
+    }
+    .role-row label.active {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .session-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 12px;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-left: auto;
+    }
+
+    .session-chip .role-tag {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #3a2700;
+      font-size: 10px;
+    }
+
+    .assign-panel {
+      margin-top: 12px;
+      border: 1px dashed var(--gold);
+      background: var(--gold-soft);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .assign-panel h3 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: #7a4d00;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+    }
+    .assign-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 260px;
+      overflow: auto;
+    }
+    .assign-item {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 12px;
+    }
+    .assign-item .row {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .assign-item input, .assign-item select {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 8px;
+      font: inherit;
+      min-width: 0;
+    }
+    .assign-item button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .login-wrap { grid-template-columns: 1fr; gap: 24px; padding: 24px 16px; }
+      .login-brand { padding-right: 0; align-items: center; text-align: center; }
+      .login-brand h1 { font-size: 26px; }
+    }
+
     @media print {
       body { background: white; }
       .topbar, .panel, .hidden-print { display: none !important; }
@@ -404,6 +688,110 @@
   </style>
 </head>
 <body>
+  <!-- ==================== LOGIN INSTITUCIONAL ==================== -->
+  <div id="loginView">
+    <div class="login-wrap">
+      <div class="login-brand">
+        <div class="brand-logo">
+          <img alt="Universidad Santo Tomás Bogotá" src="resources/Logo_Santoto_Bogota.png" onerror="this.style.display='none'; this.parentNode.textContent='Universidad Santo Tomás';" />
+        </div>
+        <h1>
+          Sistema de Asistencia Docente
+          <span>Facultad de Gobierno y Relaciones Internacionales</span>
+        </h1>
+        <p>
+          Plataforma institucional para el registro, validación y consolidación de la asistencia docente.
+          Cada docente crea su credencial y visualiza únicamente las asignaturas que tiene asignadas en el periodo vigente.
+        </p>
+      </div>
+
+      <div class="login-right">
+        <div class="login-card">
+          <h2 id="authTitle">Iniciar sesión</h2>
+          <p class="sub" id="authSub">Ingrese con sus credenciales institucionales.</p>
+
+          <div class="tabs" role="tablist">
+            <button type="button" class="tab-btn active" data-tab="login">Iniciar sesión</button>
+            <button type="button" class="tab-btn" data-tab="register">Crear usuario</button>
+          </div>
+
+          <!-- Formulario de inicio de sesión -->
+          <form class="login-form" id="formLogin" autocomplete="off">
+            <div class="field">
+              <label>Usuario (correo o identificación)</label>
+              <input type="text" id="loginUser" required />
+            </div>
+            <div class="field">
+              <label>Contraseña</label>
+              <input type="password" id="loginPass" required />
+            </div>
+            <button class="btn-main" type="submit">Ingresar</button>
+            <div class="login-msg" id="loginMsg"></div>
+            <div class="login-hint">
+              ¿Primera vez? Cree su usuario en la pestaña <strong>Crear usuario</strong> usando su nombre completo como aparece en el horario.
+            </div>
+          </form>
+
+          <!-- Formulario de registro -->
+          <form class="login-form" id="formRegister" autocomplete="off" style="display:none;">
+            <div class="role-row">
+              <label id="roleDocenteLabel" class="active">
+                <input type="radio" name="regRole" value="docente" checked /> Docente
+              </label>
+              <label id="roleAdminLabel">
+                <input type="radio" name="regRole" value="admin" /> Administrador
+              </label>
+            </div>
+
+            <div class="field" id="regNombreWrap">
+              <label>Nombre completo del docente</label>
+              <select id="regNombre"></select>
+            </div>
+
+            <div class="field" id="regNombreLibreWrap" style="display:none;">
+              <label>Nombre completo del administrador</label>
+              <input type="text" id="regNombreLibre" placeholder="Ej: Coordinación Académica" />
+            </div>
+
+            <div class="field">
+              <label>Usuario (correo institucional o identificación)</label>
+              <input type="text" id="regUser" required placeholder="correo@usantotomas.edu.co" />
+            </div>
+
+            <div class="field">
+              <label>Identificación</label>
+              <input type="text" id="regId" placeholder="Número de documento" />
+            </div>
+
+            <div class="field">
+              <label>Contraseña</label>
+              <input type="password" id="regPass" required minlength="6" />
+            </div>
+
+            <div class="field">
+              <label>Confirmar contraseña</label>
+              <input type="password" id="regPass2" required minlength="6" />
+            </div>
+
+            <div class="field" id="adminCodeWrap" style="display:none;">
+              <label>Código de autorización administrativa</label>
+              <input type="password" id="regAdminCode" placeholder="Código institucional" />
+            </div>
+
+            <button class="btn-main" type="submit">Crear usuario</button>
+            <div class="login-msg" id="regMsg"></div>
+            <div class="login-hint">
+              El nombre del docente debe coincidir con el registrado en el horario para asociar sus asignaturas automáticamente.
+              Las asignaturas marcadas como "Sin docente asignado" podrán ser vinculadas por un administrador.
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== APLICACIÓN ==================== -->
+  <div id="appView" style="display:none;">
   <div class="topbar hidden-print">
     <button class="btn-primary" id="btnPrint">Imprimir / Exportar PDF</button>
     <button id="btnSave">Guardar borrador</button>
@@ -411,6 +799,11 @@
     <button id="btnExportJson">Exportar historial JSON</button>
     <button id="btnClearSign">Limpiar firma</button>
     <button id="btnLoadSchedule">Cargar desde horario</button>
+    <div class="session-chip" id="sessionChip">
+      <span id="sessionName">—</span>
+      <span class="role-tag" id="sessionRole">docente</span>
+      <button id="btnLogout" style="margin-left:4px; padding:4px 10px; border-radius:8px; border:none; background:#fff; color:var(--primary-dark); cursor:pointer; font-weight:700;">Salir</button>
+    </div>
   </div>
 
   <div class="page">
@@ -426,13 +819,22 @@
           <label>Registro del horario</label>
           <select id="selectorHorario"></select>
         </div>
-        <div class="field">
+        <div class="field" id="adminModeWrap">
           <label>Modo de administración</label>
           <select id="adminModeSelect">
             <option value="off">Bloqueado</option>
             <option value="on">Habilitado</option>
           </select>
         </div>
+      </div>
+
+      <!-- Panel exclusivo para administradores: asignar docentes a asignaturas sin docente -->
+      <div class="assign-panel" id="assignPanel" style="display:none;">
+        <h3>Asignaturas sin docente asignado</h3>
+        <div class="small" style="color:#7a4d00; margin-bottom:8px;">
+          Asigne el docente titular para que el sistema vincule el horario a su cuenta y habilite la planilla de asistencia.
+        </div>
+        <div class="assign-list" id="assignList"></div>
       </div>
 
       <div class="grid-2">
@@ -645,8 +1047,257 @@
       </div>
     </main>
   </div>
+  </div>
+  <!-- ==================== / APLICACIÓN ==================== -->
 
   <script>
+    // ==================== MÓDULO DE AUTENTICACIÓN INSTITUCIONAL ====================
+    const AUTH = (function () {
+      const USERS_KEY = "controlAsistenciaDocenteUsuarios";
+      const SESSION_KEY = "controlAsistenciaDocenteSesion";
+      const ASSIGN_KEY = "controlAsistenciaDocenteAsignaciones";
+      const ADMIN_CODE = "ADMIN-FAGORI-2026";
+
+      async function hashPassword(password) {
+        if (window.crypto && window.crypto.subtle) {
+          const data = new TextEncoder().encode(password + "::santotomas::fagori");
+          const buf = await window.crypto.subtle.digest("SHA-256", data);
+          return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+        }
+        let h = 0;
+        for (let i = 0; i < password.length; i++) h = ((h << 5) - h + password.charCodeAt(i)) | 0;
+        return "fallback-" + h;
+      }
+
+      function loadUsers() {
+        try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; }
+        catch (e) { return []; }
+      }
+
+      function saveUsers(list) {
+        localStorage.setItem(USERS_KEY, JSON.stringify(list));
+      }
+
+      function loadAssignments() {
+        try { return JSON.parse(localStorage.getItem(ASSIGN_KEY)) || {}; }
+        catch (e) { return {}; }
+      }
+
+      function saveAssignments(obj) {
+        localStorage.setItem(ASSIGN_KEY, JSON.stringify(obj));
+      }
+
+      function normalize(text) {
+        return (text || "").toString().trim().toLowerCase();
+      }
+
+      async function register(data) {
+        const users = loadUsers();
+        const usernameNorm = normalize(data.username);
+        if (!usernameNorm) throw new Error("Debe indicar un usuario.");
+        if (users.some(u => normalize(u.username) === usernameNorm)) {
+          throw new Error("Ya existe un usuario con ese identificador.");
+        }
+        if (!data.password || data.password.length < 6) {
+          throw new Error("La contraseña debe tener al menos 6 caracteres.");
+        }
+        if (data.password !== data.password2) {
+          throw new Error("Las contraseñas no coinciden.");
+        }
+        if (!data.nombre) throw new Error("Debe seleccionar o indicar el nombre.");
+        if (data.role === "admin" && data.adminCode !== ADMIN_CODE) {
+          throw new Error("Código de autorización administrativa inválido.");
+        }
+        const hash = await hashPassword(data.password);
+        const user = {
+          username: data.username.trim(),
+          nombre: data.nombre.trim(),
+          identificacion: (data.identificacion || "").trim(),
+          role: data.role === "admin" ? "admin" : "docente",
+          passwordHash: hash,
+          createdAt: new Date().toISOString()
+        };
+        users.push(user);
+        saveUsers(users);
+        return user;
+      }
+
+      async function login(username, password) {
+        const users = loadUsers();
+        const user = users.find(u => normalize(u.username) === normalize(username));
+        if (!user) throw new Error("Usuario no encontrado.");
+        const hash = await hashPassword(password);
+        if (hash !== user.passwordHash) throw new Error("Contraseña incorrecta.");
+        const session = { username: user.username, nombre: user.nombre, role: user.role, identificacion: user.identificacion };
+        localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+        return session;
+      }
+
+      function currentSession() {
+        try { return JSON.parse(localStorage.getItem(SESSION_KEY)) || null; }
+        catch (e) { return null; }
+      }
+
+      function logout() {
+        localStorage.removeItem(SESSION_KEY);
+      }
+
+      return { register, login, logout, currentSession, loadAssignments, saveAssignments, normalize };
+    })();
+
+    // ==================== UI DE LOGIN ====================
+    (function initLoginUI() {
+      const loginView = document.getElementById("loginView");
+      const appView = document.getElementById("appView");
+      const tabBtns = document.querySelectorAll(".tab-btn");
+      const formLogin = document.getElementById("formLogin");
+      const formRegister = document.getElementById("formRegister");
+      const loginMsg = document.getElementById("loginMsg");
+      const regMsg = document.getElementById("regMsg");
+      const authTitle = document.getElementById("authTitle");
+      const authSub = document.getElementById("authSub");
+
+      function showTab(tab) {
+        tabBtns.forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+        formLogin.style.display = tab === "login" ? "" : "none";
+        formRegister.style.display = tab === "register" ? "" : "none";
+        if (tab === "login") {
+          authTitle.textContent = "Iniciar sesión";
+          authSub.textContent = "Ingrese con sus credenciales institucionales.";
+        } else {
+          authTitle.textContent = "Crear usuario";
+          authSub.textContent = "Registre su credencial para acceder a su planilla de asistencia.";
+          poblarSelectorNombres();
+        }
+      }
+
+      tabBtns.forEach(b => b.addEventListener("click", () => showTab(b.dataset.tab)));
+
+      // Obtener nombres únicos del dataset para registro
+      function poblarSelectorNombres() {
+        const select = document.getElementById("regNombre");
+        if (!select || select.dataset.ready === "1") return;
+        const nombres = new Set();
+        if (window.DATASET_DOCENTES) {
+          window.DATASET_DOCENTES.forEach(n => nombres.add(n));
+        }
+        const opts = Array.from(nombres).sort();
+        select.innerHTML = '<option value="">— Seleccione —</option>' +
+          opts.map(n => '<option value="' + n.replace(/"/g, "&quot;") + '">' + n + "</option>").join("");
+        select.dataset.ready = "1";
+      }
+
+      // Toggle de rol
+      const roleInputs = document.querySelectorAll('input[name="regRole"]');
+      const adminCodeWrap = document.getElementById("adminCodeWrap");
+      const regNombreWrap = document.getElementById("regNombreWrap");
+      const regNombreLibreWrap = document.getElementById("regNombreLibreWrap");
+      const roleDocenteLabel = document.getElementById("roleDocenteLabel");
+      const roleAdminLabel = document.getElementById("roleAdminLabel");
+      roleInputs.forEach(r => r.addEventListener("change", () => {
+        const isAdmin = r.value === "admin" && r.checked;
+        if (r.checked) {
+          adminCodeWrap.style.display = isAdmin ? "" : "none";
+          regNombreWrap.style.display = isAdmin ? "none" : "";
+          regNombreLibreWrap.style.display = isAdmin ? "" : "none";
+          roleDocenteLabel.classList.toggle("active", !isAdmin);
+          roleAdminLabel.classList.toggle("active", isAdmin);
+        }
+      }));
+
+      formLogin.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        loginMsg.textContent = ""; loginMsg.className = "login-msg";
+        try {
+          const user = await AUTH.login(
+            document.getElementById("loginUser").value,
+            document.getElementById("loginPass").value
+          );
+          loginMsg.textContent = "Acceso correcto. Cargando asignaturas…";
+          loginMsg.classList.add("ok");
+          setTimeout(() => enterApp(user), 400);
+        } catch (err) {
+          loginMsg.textContent = err.message;
+          loginMsg.classList.add("err");
+        }
+      });
+
+      formRegister.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        regMsg.textContent = ""; regMsg.className = "login-msg";
+        const role = document.querySelector('input[name="regRole"]:checked').value;
+        const nombre = role === "admin"
+          ? document.getElementById("regNombreLibre").value
+          : document.getElementById("regNombre").value;
+        try {
+          await AUTH.register({
+            username: document.getElementById("regUser").value,
+            password: document.getElementById("regPass").value,
+            password2: document.getElementById("regPass2").value,
+            identificacion: document.getElementById("regId").value,
+            nombre: nombre,
+            role: role,
+            adminCode: document.getElementById("regAdminCode").value
+          });
+          regMsg.textContent = "Usuario creado. Inicie sesión.";
+          regMsg.classList.add("ok");
+          formRegister.reset();
+          roleDocenteLabel.classList.add("active");
+          roleAdminLabel.classList.remove("active");
+          adminCodeWrap.style.display = "none";
+          regNombreWrap.style.display = "";
+          regNombreLibreWrap.style.display = "none";
+          setTimeout(() => showTab("login"), 900);
+        } catch (err) {
+          regMsg.textContent = err.message;
+          regMsg.classList.add("err");
+        }
+      });
+
+      let entered = false;
+      function enterApp(session) {
+        if (entered) return;
+        entered = true;
+        loginView.style.display = "none";
+        appView.style.display = "";
+        window.CURRENT_SESSION = session;
+        if (typeof window.bootApp === "function") {
+          window.bootApp();
+        } else {
+          // Esperar a que el IIFE principal defina bootApp
+          const wait = setInterval(() => {
+            if (typeof window.bootApp === "function") {
+              clearInterval(wait);
+              window.bootApp();
+            }
+          }, 20);
+        }
+      }
+
+      window.AUTH_ENTER_APP = enterApp;
+      window.AUTH_SHOW_LOGIN = function () {
+        appView.style.display = "none";
+        loginView.style.display = "";
+        showTab("login");
+      };
+
+      // Auto-login si hay sesión (se ejecuta una vez la app esté lista)
+      document.addEventListener("DOMContentLoaded", () => {
+        const existing = AUTH.currentSession();
+        if (existing) enterApp(existing);
+      });
+      // Si DOM ya está cargado (script al final del body) dispara manualmente
+      if (document.readyState === "complete" || document.readyState === "interactive") {
+        setTimeout(() => {
+          const existing = AUTH.currentSession();
+          if (existing && typeof window.bootApp === "function" && document.getElementById("loginView").style.display !== "none") {
+            enterApp(existing);
+          }
+        }, 0);
+      }
+    })();
+
+    // ==================== APLICACIÓN DE ASISTENCIA ====================
     (function () {
       "use strict";
 
@@ -1231,6 +1882,26 @@
         }
       ];
 
+      // Aplicar las asignaciones que el administrador haya hecho
+      function aplicarAsignaciones() {
+        const asignaciones = JSON.parse(localStorage.getItem("controlAsistenciaDocenteAsignaciones") || "{}");
+        datasetHorario.forEach((item, idx) => {
+          const key = item.codigoMateria + "||" + item.grupo + "||" + idx;
+          if (item.docente === "Sin docente asignado" && asignaciones[key]) {
+            item.docente = asignaciones[key].nombre;
+            item.identificacion = asignaciones[key].identificacion || "";
+          }
+        });
+      }
+      aplicarAsignaciones();
+
+      // Exponer lista de docentes para el formulario de registro
+      window.DATASET_DOCENTES = Array.from(new Set(
+        datasetHorario
+          .map(d => d.docente)
+          .filter(n => n && n !== "Sin docente asignado")
+      ));
+
       const inputIds = [
         "docente", "identificacion", "programa", "periodo", "nivel", "grupo", "codigoMateria", "materia", "dia", "horaInicio", "horaFin", "aula", "rango"
       ];
@@ -1241,6 +1912,13 @@
         reopenedDates: [],
         adminMode: false
       };
+
+      let filteredIndexes = [];
+      let currentUser = null;
+      function draftKey() {
+        const uid = currentUser ? currentUser.username : "anon";
+        return "controlAsistenciaDocenteFagori::" + uid;
+      }
 
       const el = {
         fechaGeneracion: document.getElementById("fechaGeneracion"),
@@ -1302,12 +1980,28 @@
 
       function fillHorarioSelector() {
         el.selectorHorario.innerHTML = "";
+        const isAdmin = currentUser && currentUser.role === "admin";
+        const userName = currentUser ? currentUser.nombre : "";
+        const norm = s => (s || "").toString().trim().toLowerCase();
+        filteredIndexes = [];
+
         datasetHorario.forEach(function (item, index) {
+          const matchDocente = norm(item.docente) === norm(userName);
+          if (!isAdmin && !matchDocente) return;
+          filteredIndexes.push(index);
           const option = document.createElement("option");
           option.value = String(index);
-          option.textContent = item.codigoMateria + " · " + item.materia + " · " + item.grupo + " · " + item.docente;
+          const prefix = isAdmin && item.docente === "Sin docente asignado" ? "⚠ " : "";
+          option.textContent = prefix + item.codigoMateria + " · " + item.materia + " · " + item.grupo + " · " + item.docente;
           el.selectorHorario.appendChild(option);
         });
+
+        if (!filteredIndexes.length) {
+          const option = document.createElement("option");
+          option.value = "";
+          option.textContent = "No hay asignaturas vinculadas a su usuario.";
+          el.selectorHorario.appendChild(option);
+        }
       }
 
       function syncPreview() {
@@ -1464,7 +2158,14 @@
       }
 
       function cargarDesdeSelector() {
-        const item = datasetHorario[Number(el.selectorHorario.value)] || datasetHorario[0];
+        if (el.selectorHorario.value === "" || !filteredIndexes.length) {
+          state.rows = [];
+          state.history = [];
+          syncPreview();
+          renderTable();
+          return;
+        }
+        const item = datasetHorario[Number(el.selectorHorario.value)] || datasetHorario[filteredIndexes[0]];
         el.docente.value = item.docente;
         el.identificacion.value = item.identificacion || "";
         el.programa.value = item.programa;
@@ -1797,12 +2498,12 @@
 
       function autoGuardar() {
         try {
-          localStorage.setItem("controlAsistenciaDocenteFagori", JSON.stringify(buildPayload()));
+          localStorage.setItem(draftKey(), JSON.stringify(buildPayload()));
         } catch (e) {}
       }
 
       function autoCargar() {
-        const raw = localStorage.getItem("controlAsistenciaDocenteFagori");
+        const raw = localStorage.getItem(draftKey());
         if (!raw) return false;
         try {
           restoreFromData(JSON.parse(raw));
@@ -1811,12 +2512,12 @@
       }
 
       function guardarLocal() {
-        localStorage.setItem("controlAsistenciaDocenteFagori", JSON.stringify(buildPayload()));
+        localStorage.setItem(draftKey(), JSON.stringify(buildPayload()));
         alert("Borrador guardado en este navegador.");
       }
 
       function cargarLocal() {
-        const raw = localStorage.getItem("controlAsistenciaDocenteFagori");
+        const raw = localStorage.getItem(draftKey());
         if (!raw) {
           alert("No existe un borrador guardado en este navegador.");
           return;
@@ -1919,10 +2620,88 @@
         el.testResults.innerHTML = checks.map(function (c) { return "<li>" + c + "</li>"; }).join("");
       }
 
-      function start() {
-        fillHorarioSelector();
-        setDefaultDates();
-        updateInputListeners();
+      // ========= Panel admin: asignar docentes a "Sin docente asignado" =========
+      function renderAssignPanel() {
+        const panel = document.getElementById("assignPanel");
+        const list = document.getElementById("assignList");
+        if (!panel || !list) return;
+        const isAdmin = currentUser && currentUser.role === "admin";
+        if (!isAdmin) { panel.style.display = "none"; return; }
+
+        const pendientes = datasetHorario
+          .map((item, idx) => ({ item, idx }))
+          .filter(x => x.item.docente === "Sin docente asignado");
+
+        if (!pendientes.length) {
+          panel.style.display = "";
+          list.innerHTML = '<div class="small" style="color:#7a4d00;">No hay asignaturas pendientes de asignación.</div>';
+          return;
+        }
+
+        panel.style.display = "";
+        const sugeridos = window.DATASET_DOCENTES || [];
+        list.innerHTML = pendientes.map(({ item, idx }) => {
+          const key = item.codigoMateria + "||" + item.grupo + "||" + idx;
+          const opts = sugeridos.map(n => '<option value="' + n.replace(/"/g, "&quot;") + '">' + n + "</option>").join("");
+          return (
+            '<div class="assign-item" data-key="' + key + '" data-idx="' + idx + '">' +
+              '<div><strong>' + item.codigoMateria + "</strong> · " + item.materia + " · " + item.grupo + "</div>" +
+              '<div class="row">' +
+                '<input class="assign-name" placeholder="Nombre del docente" list="docs-' + idx + '" />' +
+                '<datalist id="docs-' + idx + '">' + opts + '</datalist>' +
+                '<input class="assign-id" placeholder="Identificación (opcional)" />' +
+                '<button type="button" class="btn-assign">Asignar</button>' +
+              "</div>" +
+            "</div>"
+          );
+        }).join("");
+
+        list.querySelectorAll(".btn-assign").forEach(btn => {
+          btn.addEventListener("click", function () {
+            const parent = btn.closest(".assign-item");
+            const key = parent.dataset.key;
+            const idx = Number(parent.dataset.idx);
+            const nombre = parent.querySelector(".assign-name").value.trim();
+            const identificacion = parent.querySelector(".assign-id").value.trim();
+            if (!nombre) { alert("Ingrese el nombre del docente."); return; }
+            const asignaciones = JSON.parse(localStorage.getItem("controlAsistenciaDocenteAsignaciones") || "{}");
+            asignaciones[key] = { nombre, identificacion };
+            localStorage.setItem("controlAsistenciaDocenteAsignaciones", JSON.stringify(asignaciones));
+            datasetHorario[idx].docente = nombre;
+            datasetHorario[idx].identificacion = identificacion;
+            if (!window.DATASET_DOCENTES.includes(nombre)) window.DATASET_DOCENTES.push(nombre);
+            fillHorarioSelector();
+            renderAssignPanel();
+            alert("Docente asignado. La planilla quedará vinculada cuando el docente inicie sesión con su nombre.");
+          });
+        });
+      }
+
+      function renderSessionChip() {
+        const chip = document.getElementById("sessionChip");
+        if (!chip) return;
+        if (!currentUser) { chip.style.display = "none"; return; }
+        chip.style.display = "";
+        document.getElementById("sessionName").textContent = currentUser.nombre;
+        document.getElementById("sessionRole").textContent = currentUser.role === "admin" ? "admin" : "docente";
+      }
+
+      function applyRoleVisibility() {
+        const wrap = document.getElementById("adminModeWrap");
+        if (!wrap) return;
+        if (!currentUser || currentUser.role !== "admin") {
+          wrap.style.display = "none";
+          state.adminMode = false;
+          el.adminModeSelect.value = "off";
+        } else {
+          wrap.style.display = "";
+        }
+      }
+
+      let wired = false;
+      function wireEventsOnce() {
+        if (wired) return;
+        wired = true;
 
         document.getElementById("btnPrint").addEventListener("click", printControl);
         document.getElementById("btnSave").addEventListener("click", guardarLocal);
@@ -1935,6 +2714,12 @@
         document.getElementById("btnAddManual").addEventListener("click", agregarFilaManual);
         document.getElementById("btnRebuild").addEventListener("click", addWeeksSchedule);
         document.getElementById("btnReopen").addEventListener("click", reabrirFecha);
+
+        document.getElementById("btnLogout").addEventListener("click", function () {
+          localStorage.removeItem("controlAsistenciaDocenteSesion");
+          currentUser = null;
+          if (typeof window.AUTH_SHOW_LOGIN === "function") window.AUTH_SHOW_LOGIN();
+        });
 
         el.selectorHorario.addEventListener("change", cargarDesdeSelector);
         el.fechaClase.addEventListener("change", function () {
@@ -1978,14 +2763,33 @@
         });
 
         window.addEventListener("resize", resizeCanvas);
-        resizeCanvas();
-        enableAdminMode();
-        if (!autoCargar()) {
-          cargarDesdeSelector();
-        }
       }
 
-      start();
+      window.bootApp = function () {
+        currentUser = window.CURRENT_SESSION || null;
+        aplicarAsignaciones();
+        window.DATASET_DOCENTES = Array.from(new Set(
+          datasetHorario.map(d => d.docente).filter(n => n && n !== "Sin docente asignado")
+        ));
+        wireEventsOnce();
+        renderSessionChip();
+        applyRoleVisibility();
+        renderAssignPanel();
+        fillHorarioSelector();
+        setDefaultDates();
+        updateInputListeners();
+        resizeCanvas();
+        enableAdminMode();
+
+        if (el.selectorHorario.options.length && el.selectorHorario.value) {
+          if (!autoCargar()) cargarDesdeSelector();
+        } else {
+          state.rows = [];
+          state.history = [];
+          syncPreview();
+          renderTable();
+        }
+      };
     })();
   </script>
 </body>
