@@ -1117,6 +1117,19 @@
   <!-- ==================== / APLICACIÓN ==================== -->
 
   <script>
+    // Espera hasta que el bloque de Firebase (script type="module") termine de
+    // exponer window.FB. Si no llega en el timeout, devuelve null y la app
+    // continúa funcionando solo con localStorage.
+    window.whenFB = function whenFB(timeoutMs) {
+      if (window.FB) return Promise.resolve(window.FB);
+      return new Promise(function (resolve) {
+        var done = false;
+        var finish = function () { if (done) return; done = true; resolve(window.FB || null); };
+        window.addEventListener("fb-ready", finish, { once: true });
+        setTimeout(finish, typeof timeoutMs === "number" ? timeoutMs : 4000);
+      });
+    };
+
     // ==================== MÓDULO DE AUTENTICACIÓN INSTITUCIONAL ====================
     const AUTH = (function () {
       const USERS_KEY = "controlAsistenciaDocenteUsuarios";
@@ -1199,6 +1212,13 @@
           throw new Error("Ya existe un usuario con esa identificación.");
         }
 
+        // Validación extra en la nube: evita que dos dispositivos creen el mismo correo.
+        const fb = await window.whenFB(2500);
+        if (fb) {
+          const remote = await fb.getUser(usernameNorm);
+          if (remote) throw new Error("Ya existe un usuario registrado con ese correo.");
+        }
+
         // Determinar rol automáticamente según el correo institucional
         const role = isAdminEmail(usernameNorm) ? "admin" : "docente";
         if (data.role === "admin" && role !== "admin") {
@@ -1216,6 +1236,7 @@
         };
         users.push(user);
         saveUsers(users);
+        if (fb) fb.saveUser(usernameNorm, user);
         return user;
       }
 
@@ -1226,15 +1247,51 @@
           throw new Error("Solo se aceptan correos del dominio @usta.edu.co.");
         }
         const users = loadUsers();
-        const user = users.find(u =>
+        let user = users.find(u =>
           normalize(u.username) === idNorm || normalize(u.identificacion) === idNorm
         );
+
+        // Si no está en el caché local, buscar en Firestore y cachear.
+        if (!user) {
+          const fb = await window.whenFB(2500);
+          if (fb) {
+            let remote = null;
+            if (isEmail(idNorm)) {
+              remote = await fb.getUser(idNorm);
+            } else {
+              const all = await fb.getAllUsers();
+              remote = all.find(u =>
+                normalize(u.username) === idNorm || normalize(u.identificacion) === idNorm
+              ) || null;
+            }
+            if (remote) {
+              user = remote;
+              users.push(remote);
+              saveUsers(users);
+            }
+          }
+        }
+
         if (!user) throw new Error("Usuario no encontrado.");
         const hash = await hashPassword(password);
         if (hash !== user.passwordHash) throw new Error("Contraseña incorrecta.");
         const session = { username: user.username, nombre: user.nombre, role: user.role, identificacion: user.identificacion };
         localStorage.setItem(SESSION_KEY, JSON.stringify(session));
         return session;
+      }
+
+      async function hydrateUsersFromCloud() {
+        const fb = await window.whenFB(2500);
+        if (!fb) return;
+        const cloud = await fb.getAllUsers();
+        if (!cloud || !cloud.length) return;
+        const local = loadUsers();
+        const byEmail = new Map();
+        local.forEach(u => byEmail.set(normalize(u.username), u));
+        cloud.forEach(u => {
+          if (u && u.username) byEmail.set(normalize(u.username), u);
+        });
+        saveUsers(Array.from(byEmail.values()));
       }
 
       function currentSession() {
@@ -1262,10 +1319,11 @@
         if (dataUrl) users[idx].firmaGuardada = dataUrl;
         else delete users[idx].firmaGuardada;
         saveUsers(users);
+        if (window.FB) window.FB.updateSignature(target, dataUrl || null);
         return true;
       }
 
-      return { register, login, logout, currentSession, loadAssignments, saveAssignments, normalize, getSavedSignature, setSavedSignature };
+      return { register, login, logout, currentSession, loadAssignments, saveAssignments, normalize, getSavedSignature, setSavedSignature, hydrateUsersFromCloud };
     })();
 
     // ==================== UI DE LOGIN ====================
@@ -1539,6 +1597,10 @@
         loginView.style.display = "";
         showTab("login");
       };
+
+      // Hidrata el caché local de usuarios con los que existan en Firestore
+      // (permite que un docente registrado desde otro dispositivo inicie sesión aquí).
+      window.whenFB(3000).then(fb => { if (fb) AUTH.hydrateUsersFromCloud(); });
 
       // Auto-login si hay sesión (se ejecuta una vez la app esté lista)
       document.addEventListener("DOMContentLoaded", () => {
@@ -2775,9 +2837,21 @@
         renderTable();
       }
 
+      let draftSyncTimer = null;
+      function syncDraftToCloud(key, payload) {
+        if (!window.FB) return;
+        clearTimeout(draftSyncTimer);
+        draftSyncTimer = setTimeout(function () {
+          window.FB.saveDraft(key, payload);
+        }, 1500);
+      }
+
       function autoGuardar() {
         try {
-          localStorage.setItem(draftKey(), JSON.stringify(buildPayload()));
+          const payload = buildPayload();
+          const key = draftKey();
+          localStorage.setItem(key, JSON.stringify(payload));
+          syncDraftToCloud(key, payload);
         } catch (e) {}
       }
 
@@ -2812,21 +2886,38 @@
       }
 
       function guardarLocal() {
-        localStorage.setItem(draftKey(), JSON.stringify(buildPayload()));
-        alert("Borrador guardado en este navegador.");
+        const payload = buildPayload();
+        const key = draftKey();
+        localStorage.setItem(key, JSON.stringify(payload));
+        if (window.FB) window.FB.saveDraft(key, payload);
+        alert("Borrador guardado (local y nube).");
       }
 
-      function cargarLocal() {
+      async function cargarLocal() {
         migrarBorradorLegacy();
-        let raw = localStorage.getItem(draftKey());
+        const key = draftKey();
+        let raw = localStorage.getItem(key);
         let origen = "sesión actual";
+
+        // Si no existe local, probar en la nube antes del fallback legacy.
         if (!raw) {
-          // Último recurso: leer el borrador antiguo aunque no corresponda exactamente
+          const fb = await window.whenFB(2000);
+          if (fb) {
+            const cloud = await fb.getDraft(key);
+            if (cloud) {
+              raw = JSON.stringify(cloud);
+              localStorage.setItem(key, raw);
+              origen = "nube";
+            }
+          }
+        }
+
+        if (!raw) {
           raw = localStorage.getItem("controlAsistenciaDocenteFagori");
           origen = "histórico del navegador";
         }
         if (!raw) {
-          alert("No existe un borrador guardado en este navegador.");
+          alert("No existe un borrador guardado ni en este navegador ni en la nube.");
           return;
         }
         try {
@@ -2974,6 +3065,7 @@
             const asignaciones = JSON.parse(localStorage.getItem("controlAsistenciaDocenteAsignaciones") || "{}");
             asignaciones[key] = { nombre, identificacion };
             localStorage.setItem("controlAsistenciaDocenteAsignaciones", JSON.stringify(asignaciones));
+            if (window.FB) window.FB.setAssignment(key, { nombre, identificacion });
             datasetHorario[idx].docente = nombre;
             datasetHorario[idx].identificacion = identificacion;
             if (!window.DATASET_DOCENTES.includes(nombre)) window.DATASET_DOCENTES.push(nombre);
@@ -3073,6 +3165,47 @@
         window.addEventListener("resize", resizeCanvas);
       }
 
+      async function hydrateAssignmentsFromCloud() {
+        const fb = await window.whenFB(3000);
+        if (!fb) return false;
+        const cloud = await fb.getAllAssignments();
+        if (!cloud || !Object.keys(cloud).length) return false;
+        const localRaw = localStorage.getItem("controlAsistenciaDocenteAsignaciones");
+        const local = localRaw ? JSON.parse(localRaw) : {};
+        const merged = Object.assign({}, local, cloud);
+        localStorage.setItem("controlAsistenciaDocenteAsignaciones", JSON.stringify(merged));
+        aplicarAsignaciones();
+        return true;
+      }
+
+      async function hydrateDraftFromCloud() {
+        const fb = await window.whenFB(3000);
+        if (!fb) return false;
+        const cloud = await fb.getDraft(draftKey());
+        if (!cloud) return false;
+        localStorage.setItem(draftKey(), JSON.stringify(cloud));
+        restoreFromData(cloud);
+        return true;
+      }
+
+      async function sincronizarDesdeLaNube() {
+        // Refrescar caché de usuarios (firma guardada, nuevos registros desde otros dispositivos).
+        if (AUTH && AUTH.hydrateUsersFromCloud) {
+          try { await AUTH.hydrateUsersFromCloud(); } catch (e) {}
+        }
+        // Asignaciones: afectan el selector y las vinculaciones.
+        const cambioAsignaciones = await hydrateAssignmentsFromCloud();
+        if (cambioAsignaciones) {
+          window.DATASET_DOCENTES = Array.from(new Set(
+            datasetHorario.map(d => d.docente).filter(n => n && n !== "Sin docente asignado")
+          ));
+          fillHorarioSelector();
+          renderAssignPanel();
+        }
+        // Borrador en la nube asociado al usuario actual (si hay).
+        await hydrateDraftFromCloud();
+      }
+
       window.bootApp = function () {
         currentUser = window.CURRENT_SESSION || null;
         aplicarAsignaciones();
@@ -3098,18 +3231,21 @@
           syncPreview();
           renderTable();
         }
+
+        // Sincronizar con Firestore en segundo plano.
+        sincronizarDesdeLaNube().then(() => {
+          actualizarBotonFirmaGuardada();
+        }).catch(e => console.warn("[FB] sync", e));
       };
     })();
   </script>
 <script type="module">
-  // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+  import { getAnalytics, isSupported as analyticsSupported } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
+  import {
+    getFirestore, doc, setDoc, getDoc, getDocs, collection, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   const firebaseConfig = {
     apiKey: "AIzaSyBHCY9w2X_nW_tQ_SDtiPbHkEMEgBpOYPU",
     authDomain: "registro-de-asistencia-docente.firebaseapp.com",
@@ -3120,9 +3256,102 @@
     measurementId: "G-Z1Z3DQ5WNP"
   };
 
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
+  analyticsSupported().then(ok => { if (ok) { try { getAnalytics(app); } catch (e) {} } }).catch(() => {});
+
+  // Firestore no admite "/" ni IDs vacíos o con más de 1500 bytes.
+  function sanitizeId(raw) {
+    const s = String(raw == null ? "" : raw).replace(/[\/\x00]/g, "_");
+    return s.length ? s.slice(0, 1400) : "_";
+  }
+
+  async function safeCall(label, fn) {
+    try { return await fn(); }
+    catch (err) { console.warn("[FB] " + label + ":", err && err.message ? err.message : err); return null; }
+  }
+
+  window.FB = {
+    ready: true,
+    projectId: firebaseConfig.projectId,
+    async saveUser(emailNorm, user) {
+      return safeCall("saveUser", async () => {
+        await setDoc(
+          doc(db, "usuarios", sanitizeId(emailNorm)),
+          Object.assign({}, user, { updatedAt: serverTimestamp() }),
+          { merge: true }
+        );
+        return true;
+      });
+    },
+    async getUser(emailNorm) {
+      return safeCall("getUser", async () => {
+        const snap = await getDoc(doc(db, "usuarios", sanitizeId(emailNorm)));
+        return snap.exists() ? snap.data() : null;
+      });
+    },
+    async getAllUsers() {
+      return (await safeCall("getAllUsers", async () => {
+        const snap = await getDocs(collection(db, "usuarios"));
+        return snap.docs.map(d => d.data()).filter(Boolean);
+      })) || [];
+    },
+    async updateSignature(emailNorm, dataUrl) {
+      return safeCall("updateSignature", async () => {
+        await setDoc(
+          doc(db, "usuarios", sanitizeId(emailNorm)),
+          { firmaGuardada: dataUrl || null, updatedAt: serverTimestamp() },
+          { merge: true }
+        );
+        return true;
+      });
+    },
+    async setAssignment(key, value) {
+      return safeCall("setAssignment", async () => {
+        await setDoc(
+          doc(db, "asignaciones", sanitizeId(key)),
+          Object.assign({}, value, { key: key, updatedAt: serverTimestamp() })
+        );
+        return true;
+      });
+    },
+    async getAllAssignments() {
+      return (await safeCall("getAllAssignments", async () => {
+        const snap = await getDocs(collection(db, "asignaciones"));
+        const obj = {};
+        snap.docs.forEach(d => {
+          const data = d.data();
+          if (data && data.key) {
+            obj[data.key] = {
+              nombre: data.nombre || "",
+              identificacion: data.identificacion || ""
+            };
+          }
+        });
+        return obj;
+      })) || {};
+    },
+    async saveDraft(key, payload) {
+      return safeCall("saveDraft", async () => {
+        await setDoc(
+          doc(db, "asistencias", sanitizeId(key)),
+          { payload: payload, key: key, updatedAt: serverTimestamp() },
+          { merge: true }
+        );
+        return true;
+      });
+    },
+    async getDraft(key) {
+      return safeCall("getDraft", async () => {
+        const snap = await getDoc(doc(db, "asistencias", sanitizeId(key)));
+        if (!snap.exists()) return null;
+        const data = snap.data();
+        return data && data.payload ? data.payload : null;
+      });
+    }
+  };
+
+  window.dispatchEvent(new Event("fb-ready"));
 </script>
 </body>
 </html>
