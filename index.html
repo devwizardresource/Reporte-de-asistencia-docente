@@ -671,6 +671,60 @@
       font-size: 12px;
     }
 
+    .sig-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 17, 38, 0.62);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+    .sig-modal.active { display: flex; }
+    .sig-modal-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 22px 24px;
+      max-width: 460px;
+      width: 100%;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.35);
+    }
+    .sig-modal-card h3 {
+      margin: 0 0 6px;
+      color: var(--primary-dark);
+      font-size: 18px;
+    }
+    .sig-modal-card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .sig-modal-canvas {
+      width: 100%;
+      height: 180px;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      background: #fbfcff;
+      touch-action: none;
+      cursor: crosshair;
+      display: block;
+    }
+    .sig-modal-secondary {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .sig-modal-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .sig-modal-actions button { flex: 1; min-width: 120px; }
+
     @media (max-width: 900px) {
       .login-wrap { grid-template-columns: 1fr; gap: 24px; padding: 24px 16px; }
       .login-brand { padding-right: 0; align-items: center; text-align: center; }
@@ -776,6 +830,28 @@
           </form>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal para guardar firma tras el registro -->
+  <div class="sig-modal" id="savedSignatureModal" role="dialog" aria-modal="true" aria-labelledby="savedSignatureTitle">
+    <div class="sig-modal-card">
+      <h3 id="savedSignatureTitle">¿Desea guardar su firma?</h3>
+      <p>
+        Puede guardar su firma ahora para que, al registrar asistencia, solo tenga que insertarla con un clic.
+        La firma se guarda en este dispositivo, asociada a su cuenta.
+      </p>
+      <canvas class="sig-modal-canvas" id="savedSignatureCanvas"></canvas>
+      <div class="sig-modal-secondary">
+        <button type="button" id="btnSavedSignatureClear">Limpiar</button>
+        <button type="button" id="btnSavedSignatureUpload">Cargar imagen</button>
+      </div>
+      <input type="file" id="savedSignatureFile" accept="image/*" style="display:none;" />
+      <div class="sig-modal-actions">
+        <button type="button" id="btnSavedSignatureSkip">Omitir por ahora</button>
+        <button type="button" class="btn-primary" id="btnSavedSignatureSave">Guardar firma</button>
+      </div>
+      <div class="login-msg" id="savedSignatureMsg"></div>
     </div>
   </div>
 
@@ -948,6 +1024,7 @@
 
       <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
         <button class="btn-primary" id="btnSign">Registrar firma en la fecha</button>
+        <button id="btnUseSavedSignature" style="display:none;">Insertar mi firma guardada</button>
         <button id="btnLoadImage">Cargar imagen</button>
         <button id="btnAddManual">Agregar fila manual</button>
         <button id="btnRebuild">Regenerar cronograma</button>
@@ -1169,7 +1246,26 @@
         localStorage.removeItem(SESSION_KEY);
       }
 
-      return { register, login, logout, currentSession, loadAssignments, saveAssignments, normalize };
+      function getSavedSignature(username) {
+        const target = normalize(username);
+        if (!target) return "";
+        const user = loadUsers().find(u => normalize(u.username) === target);
+        return (user && user.firmaGuardada) || "";
+      }
+
+      function setSavedSignature(username, dataUrl) {
+        const target = normalize(username);
+        if (!target) return false;
+        const users = loadUsers();
+        const idx = users.findIndex(u => normalize(u.username) === target);
+        if (idx === -1) return false;
+        if (dataUrl) users[idx].firmaGuardada = dataUrl;
+        else delete users[idx].firmaGuardada;
+        saveUsers(users);
+        return true;
+      }
+
+      return { register, login, logout, currentSession, loadAssignments, saveAssignments, normalize, getSavedSignature, setSavedSignature };
     })();
 
     // ==================== UI DE LOGIN ====================
@@ -1258,7 +1354,7 @@
           ? document.getElementById("regNombreLibre").value
           : document.getElementById("regNombre").value;
         try {
-          await AUTH.register({
+          const created = await AUTH.register({
             username: regUserInput.value,
             password: document.getElementById("regPass").value,
             password2: document.getElementById("regPass2").value,
@@ -1266,15 +1362,155 @@
             nombre: nombre,
             role: isAdmin ? "admin" : "docente"
           });
-          regMsg.textContent = "Usuario creado. Inicie sesión.";
+          regMsg.textContent = "Usuario creado. Ahora puede guardar su firma.";
           regMsg.classList.add("ok");
           formRegister.reset();
           refreshDetectedRole();
-          setTimeout(() => showTab("login"), 900);
+          openSavedSignatureModal(created.username, () => {
+            showTab("login");
+          });
         } catch (err) {
           regMsg.textContent = err.message;
           regMsg.classList.add("err");
         }
+      });
+
+      // Modal para guardar la firma del docente tras el registro
+      const savedSigModal = document.getElementById("savedSignatureModal");
+      const savedSigCanvas = document.getElementById("savedSignatureCanvas");
+      const savedSigMsg = document.getElementById("savedSignatureMsg");
+      const savedSigCtx = savedSigCanvas.getContext("2d");
+      let savedSigDrawing = false;
+      let savedSigHasDrawn = false;
+      let savedSigTargetUser = null;
+      let savedSigOnClose = null;
+
+      function resizeSavedSigCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        const rect = savedSigCanvas.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        const data = savedSigHasDrawn ? savedSigCanvas.toDataURL("image/png") : "";
+        savedSigCanvas.width = rect.width * ratio;
+        savedSigCanvas.height = rect.height * ratio;
+        savedSigCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        savedSigCtx.lineWidth = 2;
+        savedSigCtx.lineCap = "round";
+        savedSigCtx.strokeStyle = "#111827";
+        if (data) {
+          const img = new Image();
+          img.onload = () => savedSigCtx.drawImage(img, 0, 0, rect.width, rect.height);
+          img.src = data;
+        }
+      }
+
+      function savedSigPointerPos(evt) {
+        const rect = savedSigCanvas.getBoundingClientRect();
+        const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+        const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+        return { x: clientX - rect.left, y: clientY - rect.top };
+      }
+
+      function savedSigStart(evt) {
+        savedSigDrawing = true;
+        savedSigHasDrawn = true;
+        const p = savedSigPointerPos(evt);
+        savedSigCtx.beginPath();
+        savedSigCtx.moveTo(p.x, p.y);
+        evt.preventDefault();
+      }
+      function savedSigMove(evt) {
+        if (!savedSigDrawing) return;
+        const p = savedSigPointerPos(evt);
+        savedSigCtx.lineTo(p.x, p.y);
+        savedSigCtx.stroke();
+        evt.preventDefault();
+      }
+      function savedSigEnd() { savedSigDrawing = false; }
+
+      function clearSavedSigCanvas() {
+        savedSigCtx.clearRect(0, 0, savedSigCanvas.width, savedSigCanvas.height);
+        savedSigHasDrawn = false;
+      }
+
+      function drawSavedSigImage(src) {
+        const img = new Image();
+        img.onload = function () {
+          const rect = savedSigCanvas.getBoundingClientRect();
+          const padding = 8;
+          const scale = Math.min((rect.width - padding * 2) / img.width, (rect.height - padding * 2) / img.height, 1);
+          const drawW = img.width * scale;
+          const drawH = img.height * scale;
+          const offsetX = (rect.width - drawW) / 2;
+          const offsetY = (rect.height - drawH) / 2;
+          savedSigCtx.clearRect(0, 0, savedSigCanvas.width, savedSigCanvas.height);
+          savedSigCtx.drawImage(img, offsetX, offsetY, drawW, drawH);
+          savedSigHasDrawn = true;
+        };
+        img.src = src;
+      }
+
+      function closeSavedSigModal() {
+        savedSigModal.classList.remove("active");
+        const cb = savedSigOnClose;
+        savedSigTargetUser = null;
+        savedSigOnClose = null;
+        if (typeof cb === "function") cb();
+      }
+
+      function openSavedSignatureModal(username, onClose) {
+        savedSigTargetUser = username;
+        savedSigOnClose = onClose || null;
+        savedSigMsg.textContent = "";
+        savedSigMsg.className = "login-msg";
+        clearSavedSigCanvas();
+        savedSigModal.classList.add("active");
+        setTimeout(resizeSavedSigCanvas, 0);
+      }
+
+      savedSigCanvas.addEventListener("pointerdown", savedSigStart);
+      savedSigCanvas.addEventListener("pointermove", savedSigMove);
+      savedSigCanvas.addEventListener("pointerup", savedSigEnd);
+      savedSigCanvas.addEventListener("pointerleave", savedSigEnd);
+      savedSigCanvas.addEventListener("touchstart", savedSigStart);
+      savedSigCanvas.addEventListener("touchmove", savedSigMove);
+      savedSigCanvas.addEventListener("touchend", savedSigEnd);
+
+      document.getElementById("btnSavedSignatureClear").addEventListener("click", clearSavedSigCanvas);
+      document.getElementById("btnSavedSignatureUpload").addEventListener("click", () => {
+        document.getElementById("savedSignatureFile").click();
+      });
+      document.getElementById("savedSignatureFile").addEventListener("change", function () {
+        const file = this.files[0];
+        if (!file || !file.type.startsWith("image/")) return;
+        drawSavedSigImage(URL.createObjectURL(file));
+        this.value = "";
+      });
+      document.getElementById("btnSavedSignatureSkip").addEventListener("click", closeSavedSigModal);
+      document.getElementById("btnSavedSignatureSave").addEventListener("click", () => {
+        if (!savedSigHasDrawn) {
+          savedSigMsg.textContent = "Dibuje o cargue una imagen antes de guardar.";
+          savedSigMsg.className = "login-msg err";
+          return;
+        }
+        if (!savedSigTargetUser) {
+          savedSigMsg.textContent = "No se encontró el usuario destino.";
+          savedSigMsg.className = "login-msg err";
+          return;
+        }
+        const data = savedSigCanvas.toDataURL("image/png");
+        const ok = AUTH.setSavedSignature(savedSigTargetUser, data);
+        if (!ok) {
+          savedSigMsg.textContent = "No se pudo guardar la firma. Intente de nuevo.";
+          savedSigMsg.className = "login-msg err";
+          return;
+        }
+        savedSigMsg.textContent = "Firma guardada correctamente.";
+        savedSigMsg.className = "login-msg ok";
+        setTimeout(closeSavedSigModal, 600);
+      });
+
+      window.addEventListener("resize", () => {
+        if (savedSigModal.classList.contains("active")) resizeSavedSigCanvas();
       });
 
       let entered = false;
@@ -2403,6 +2639,26 @@
         return sigCanvas.toDataURL("image/png");
       }
 
+      function actualizarBotonFirmaGuardada() {
+        const btn = document.getElementById("btnUseSavedSignature");
+        if (!btn) return;
+        const tiene = currentUser && AUTH.getSavedSignature && AUTH.getSavedSignature(currentUser.username);
+        btn.style.display = tiene ? "" : "none";
+      }
+
+      function insertarFirmaGuardada() {
+        if (!currentUser) {
+          alert("Debe iniciar sesión para usar su firma guardada.");
+          return;
+        }
+        const data = AUTH.getSavedSignature(currentUser.username);
+        if (!data) {
+          alert("No tiene una firma guardada en esta cuenta.");
+          return;
+        }
+        pegarImagenEnCanvas(data);
+      }
+
       function registrarFirma() {
         const iso = el.fechaClase.value;
         let tipo = el.tipoRegistro.value;
@@ -2762,6 +3018,7 @@
         document.getElementById("btnClearSign").addEventListener("click", limpiarFirma);
         document.getElementById("btnLoadSchedule").addEventListener("click", cargarDesdeSelector);
         document.getElementById("btnSign").addEventListener("click", registrarFirma);
+        document.getElementById("btnUseSavedSignature").addEventListener("click", insertarFirmaGuardada);
         document.getElementById("btnAddManual").addEventListener("click", agregarFilaManual);
         document.getElementById("btnRebuild").addEventListener("click", addWeeksSchedule);
         document.getElementById("btnReopen").addEventListener("click", reabrirFecha);
@@ -2831,6 +3088,7 @@
         updateInputListeners();
         resizeCanvas();
         enableAdminMode();
+        actualizarBotonFirmaGuardada();
 
         if (el.selectorHorario.options.length && el.selectorHorario.value) {
           if (!autoCargar()) cargarDesdeSelector();
@@ -2844,4 +3102,27 @@
     })();
   </script>
 </body>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBHCY9w2X_nW_tQ_SDtiPbHkEMEgBpOYPU",
+    authDomain: "registro-de-asistencia-docente.firebaseapp.com",
+    projectId: "registro-de-asistencia-docente",
+    storageBucket: "registro-de-asistencia-docente.firebasestorage.app",
+    messagingSenderId: "193114560666",
+    appId: "1:193114560666:web:17c083c8adf8d043732723",
+    measurementId: "G-Z1Z3DQ5WNP"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
 </html>
