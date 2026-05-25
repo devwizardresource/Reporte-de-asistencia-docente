@@ -133,15 +133,15 @@
     }
 
     .appbar-logo {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.97);
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      background: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 5px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+      padding: 4px;
+      box-shadow: var(--shadow-sm);
     }
     .appbar-logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
@@ -202,9 +202,10 @@
 
     .services-menu {
       position: absolute;
-      right: 0;
+      right: -10px;
       top: calc(100% + 10px);
-      min-width: 320px;
+      min-width: 260px;
+      max-width: 90vw;
       background: var(--surface);
       color: var(--text);
       border-radius: var(--radius-lg);
@@ -412,7 +413,7 @@
     }
 
     .logo {
-      border: 1px solid var(--border);
+      border: none;
       border-radius: var(--radius-lg);
       min-height: 110px;
       display: flex;
@@ -422,12 +423,12 @@
       color: var(--muted);
       font-size: 12px;
       padding: 12px 16px;
-      background: linear-gradient(180deg, #894bf5 0%, var(--lavender-mist) 100%);
+      background: #ffffff;
     }
 
     .logo img {
-      max-width: 200%;
-      max-height: 160px;
+      max-width: 100%;
+      max-height: 100px;
       object-fit: contain;
       display: block;
     }
@@ -759,17 +760,17 @@
     }
 
     .login-brand .brand-logo {
-      background: rgba(255,255,255,0.96);
-      border-radius: 22px;
-      padding: 22px 28px;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.25);
-      max-width: 320px;
+      background: transparent;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+      max-width: 100%;
     }
 
     .login-brand .brand-logo img {
       display: block;
-      max-width: 260px;
-      max-height: 140px;
+      max-width: 380px;
+      max-height: 180px;
       object-fit: contain;
     }
 
@@ -1178,8 +1179,8 @@
     .nc-header .nc-logo {
       width: 100%; height: 92px;
       border-radius: var(--radius-md);
-      background: #fff;
-      border: 1px solid var(--border);
+      background: #ffffff;
+      border: none;
       display: flex; align-items: center; justify-content: center;
       padding: 6px;
     }
@@ -1482,7 +1483,7 @@
         ⚙️ Opciones de Asistencia
         <span class="chev" style="border-color: #fff;"></span>
       </button>
-      <div class="services-menu" role="menu" style="left: 0; right: auto;">
+      <div class="services-menu" role="menu" style="left: 0; right: auto; min-width: 250px; max-width: calc(100vw - 40px);">
         <button class="service-item" id="btnPrint">🖨️ Imprimir / Exportar PDF</button>
         <button class="service-item" id="btnSave">💾 Guardar borrador</button>
         <button class="service-item" id="btnLoad">📂 Cargar borrador</button>
@@ -1750,7 +1751,7 @@
           ⚙️ Opciones de Novedades
           <span class="chev" style="border-color: #fff;"></span>
         </button>
-        <div class="services-menu" role="menu" style="left: 0; right: auto;">
+        <div class="services-menu" role="menu" style="left: 0; right: auto; min-width: 250px; max-width: calc(100vw - 40px);">
           <button class="service-item" id="btnNcPrint">🖨️ Imprimir / Exportar PDF</button>
           <button class="service-item" id="btnNcAddRow">➕ Agregar asignatura</button>
           <button class="service-item" id="btnNcReset">🧹 Limpiar formato</button>
