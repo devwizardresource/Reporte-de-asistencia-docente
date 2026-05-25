@@ -48,6 +48,7 @@ body { background:#aaa; }
   overflow: hidden;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11pt;
+  line-height:1.15;
 }
 .t th {
   font-weight:bold; text-align:center; background:#efefef;
@@ -59,6 +60,7 @@ input[type=text], input[type=date], input[type=time] {
   width:100%; border:none; outline:none; background:transparent;
   font-family:Arial,Helvetica,sans-serif; font-size:11pt; color:#000; padding:0 1px;
 }
+.center-input { text-align:center !important; }
 select {
   width:100%; border:none; outline:none; background:transparent;
   font-family:Arial,Helvetica,sans-serif; font-size:11pt; color:#000;
@@ -80,6 +82,22 @@ textarea {
 .blue   { background:#DEEAF6; }
 /* texto que puede romper línea */
 .wrap   { white-space:normal; word-break:break-word; }
+.form-label { white-space:normal !important; overflow-wrap:anywhere; line-height:1.08 !important; }
+
+#cal-table th {
+  padding:1px 2px;
+  font-size:7pt;
+  letter-spacing:0;
+  overflow-wrap:anywhere;
+  line-height:1.08;
+}
+#cal-table td { padding:2px 3px; }
+#cal-table input, #cal-table textarea {
+  text-align:center;
+  font-size:9.5pt !important;
+  line-height:1.12;
+}
+#cal-table .text-left textarea { text-align:left; font-size:9pt !important; }
 
 /* ── ENCABEZADO ── */
 .hdr { width:100%; border-collapse:collapse; table-layout:fixed; }
@@ -184,17 +202,17 @@ textarea {
 </colgroup>
 <!-- fila MODIFICAR -->
 <tr style="height:7mm;">
-  <td class="bold wrap" rowspan="2" style="border-top:none; border-right:2px solid #000; font-size:11pt;">
-    FECHA DE RECEPCIÓN:
+  <td class="bold wrap form-label" rowspan="2" style="border-top:none; border-right:2px solid #000; font-size:11pt;">
+    FECHA DE<br>RECEPCIÓN:
   </td>
   <td rowspan="2" style="border-top:none; border-right:2px solid #000;">
-    <input type="date" id="fecha_rec">
+    <input class="center-input" type="date" id="fecha_rec">
   </td>
-  <td class="bold right wrap" rowspan="2" style="border-top:none; border-right:2px solid #000; font-size:11pt;">
-    FECHA REPORTE SAC:
+  <td class="bold right wrap form-label" rowspan="2" style="border-top:none; border-right:2px solid #000; font-size:11pt;">
+    FECHA REPORTE<br>SAC:
   </td>
   <td rowspan="2" style="border-top:none; border-right:none;">
-    <input type="date" id="fecha_sac">
+    <input class="center-input" type="date" id="fecha_sac">
   </td>
   <td rowspan="2" style="border:none; background:#fff;"></td>
   <td class="bold right" style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000; font-size:11pt;">
@@ -219,7 +237,7 @@ textarea {
 <table class="t" style="border-top:none;">
 <colgroup><col style="width:21%"><col style="width:79%"></colgroup>
 <tr style="height:7mm;">
-  <td class="bold" style="border-top:none; border-right:2px solid #000; white-space:nowrap; font-size:11pt;">
+  <td class="bold form-label" style="border-top:none; border-right:2px solid #000; font-size:11pt;">
     NOMBRE DEL PROGRAMA:
   </td>
   <td class="bold" style="border-top:none;">
@@ -254,14 +272,14 @@ textarea {
     PRIMER PERÍODO ACADÉMICO:
   </td>
   <td style="border-top:none; border-right:none;">
-    <input type="text" id="p1_txt" placeholder="Ej: 2024-1">
+    <input class="center-input" type="text" id="p1_txt" placeholder="Ej: 2024-1">
   </td>
   <td style="border:none; background:#fff;"></td>
   <td class="bold right wrap" style="border-top:none; border-right:2px solid #000; font-size:10.5pt; line-height:1.2;">
     SEGUNDO PERÍODO ACADÉMICO:
   </td>
   <td style="border-top:none; border-right:none;">
-    <input type="text" id="p2_txt" placeholder="Ej: 2024-2">
+    <input class="center-input" type="text" id="p2_txt" placeholder="Ej: 2024-2">
   </td>
   <td style="border:none; background:#fff;"></td>
   <td class="bold right wrap" style="border-top:none; border-right:2px solid #000; font-size:10.5pt; line-height:1.2;">
@@ -285,21 +303,21 @@ textarea {
 
 <table class="t" style="border-top:none;">
 <colgroup>
-  <col style="width:18%"><col style="width:59%">
-  <col style="width:9%"> <col style="width:14%">
+  <col style="width:21%"><col style="width:55%">
+  <col style="width:10%"> <col style="width:14%">
 </colgroup>
 <tr style="height:7mm;">
-  <td class="bold" style="border-top:none; border-right:2px solid #000; white-space:nowrap; font-size:11pt;">
-    NOMBRES Y APELLIDOS:
+  <td class="bold form-label" style="border-top:none; border-right:2px solid #000; font-size:11pt;">
+    NOMBRES Y<br>APELLIDOS:
   </td>
   <td style="border-top:none;">
-    <input type="text" id="nombres" placeholder="Nombre completo del estudiante">
+    <input class="center-input" type="text" id="nombres" placeholder="Nombre completo del estudiante">
   </td>
   <td class="bold right" style="border-top:none; border-left:2px solid #000; border-right:2px solid #000; white-space:nowrap; font-size:11pt;">
     CÓDIGO:
   </td>
   <td style="border-top:none;">
-    <input type="text" id="codigo">
+    <input class="center-input" type="text" id="codigo">
   </td>
 </tr>
 </table>
@@ -328,9 +346,9 @@ textarea {
   <th rowspan="2" style="border-top:none;">CÓDIGO<br>ASIG.</th>
   <th rowspan="2" style="border-top:none;">NOMBRE ASIGNATURA</th>
   <th rowspan="2" style="border-top:none;">GRUPO</th>
-  <th style="border-top:none;">CALIFICACIÓN</th>
-  <th style="border-top:none;">CALIFICACIÓN</th>
-  <th style="border-top:none;">CALIFICACIÓN</th>
+  <th style="border-top:none;">CALIF.<br>1</th>
+  <th style="border-top:none;">CALIF.<br>2</th>
+  <th style="border-top:none;">CALIF.<br>3</th>
   <th rowspan="2" style="border-top:none;">SUPLETORIO</th>
   <th rowspan="2" style="border-top:none;">CALIF. 100%<br>(SUFICIENCIA)</th>
   <th rowspan="2" style="border-top:none;">CALIF.<br>EN LETRAS</th>
@@ -466,6 +484,13 @@ function inp(id, align) {
     font-family:Arial,Helvetica,sans-serif;font-size:11pt;color:#000;
     text-align:${align||'left'};">`;
 }
+function ta(id, align) {
+  return `<textarea id="${id}" rows="1"
+    style="width:100%;border:none;outline:none;background:transparent;
+    font-family:Arial,Helvetica,sans-serif;font-size:9pt;color:#000;
+    line-height:1.12;resize:none;overflow:hidden;text-align:${align||'left'};"
+    oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';"></textarea>`;
+}
 
 function addRow() {
   const i = rowCount++;
@@ -478,16 +503,16 @@ function addRow() {
   const C = 'border:2px solid #000;border-top:none;padding:2px 4px;vertical-align:middle;overflow:hidden;';
 
   tr.innerHTML = `
-    <td style="${C}">${inp(`cod_${i}`)}</td>
-    <td style="${C}">${inp(`asig_${i}`)}</td>
+    <td style="${C}">${inp(`cod_${i}`,'center')}</td>
+    <td class="text-left" style="${C}">${ta(`asig_${i}`)}</td>
     <td style="${C};text-align:center;">${inp(`grp_${i}`,'center')}</td>
     <td style="${C};text-align:center;">${inp(`c1_${i}`,'center')}</td>
     <td style="${C};text-align:center;">${inp(`c2_${i}`,'center')}</td>
     <td style="${C};text-align:center;">${inp(`c3_${i}`,'center')}</td>
     <td style="${C};text-align:center;">${inp(`sup_${i}`,'center')}</td>
     <td style="${C};text-align:center;">${inp(`s100_${i}`,'center')}</td>
-    <td style="${C};text-align:center;">${inp(`let_${i}`,'center')}</td>
-    <td style="${C}">${inp(`doc_${i}`)}</td>
+    <td style="${C};text-align:center;">${ta(`let_${i}`,'center')}</td>
+    <td class="text-left" style="${C}">${ta(`doc_${i}`)}</td>
     <td style="${C}">&nbsp;</td>
     <td style="${C};text-align:center;" class="col-acc">
       <div class="row-btns">
