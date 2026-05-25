@@ -6,132 +6,114 @@
   <title>FAGORI · Plataforma Académica</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Paleta morada inspirada en Santoto Bogotá con tonos desvanecidos */
-      --primary: #6c4cc4;
-      --primary-dark: #4b2f9c;
-      --primary-deep: #2e1a6f;
-      --primary-soft: #f3eeff;
-      --primary-glow: rgba(108, 76, 196, 0.18);
-      --accent: #a78bfa;
-      --accent-soft: #ede9fe;
-      --lavender: #c4b5fd;
-      --lavender-mist: #f7f3ff;
-      --gold: #d39a2c;
-      --gold-soft: #fff7e8;
-      --border: #e7e0f5;
-      --border-strong: #cdbfe8;
-      --text: #1f1739;
-      --muted: #6b6386;
-      --muted-soft: #9b94b6;
-      --ok: #16a34a;
-      --warn: #d97706;
-      --danger: #dc2626;
-      --bg: #faf8ff;
-      --bg-deep: #f4eeff;
-      --surface: #ffffff;
-      --white: #ffffff;
-      --shadow-sm: 0 1px 2px rgba(46, 26, 111, 0.06);
-      --shadow-md: 0 8px 24px rgba(76, 47, 156, 0.08);
-      --shadow-lg: 0 18px 44px rgba(46, 26, 111, 0.14);
-      --shadow-xl: 0 30px 80px rgba(46, 26, 111, 0.22);
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --radius-xl: 22px;
-      --transition: 220ms cubic-bezier(.4,0,.2,1);
+      --primary: #1877F2;
+      --primary-dark: #166FE5;
+      --primary-deep: #0D4A9B;
+      --primary-soft: #E7F3FF;
+      --primary-glow: rgba(24, 119, 242, 0.2);
+      --accent: #42B72A;
+      --accent-soft: #E8FDF1;
+      --lavender: #CCD0D5;
+      --lavender-mist: #F0F2F5;
+      --gold: #F5C33B;
+      --gold-soft: #FFF9E6;
+      --border: #CED0D4;
+      --border-strong: #8A8D91;
+      --text: #050505;
+      --muted: #65676B;
+      --muted-soft: #8A8D91;
+      --ok: #42B72A;
+      --warn: #F5C33B;
+      --danger: #FA3E3E;
+      --bg: #F0F2F5;
+      --bg-deep: #E4E6EB;
+      --surface: #FFFFFF;
+      --white: #FFFFFF;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.1), 0 12px 24px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 12px 28px rgba(0, 0, 0, 0.2);
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --transition: 200ms ease;
     }
 
     * { box-sizing: border-box; }
 
-    html, body { height: 100%; }
+    html, body { height: auto; min-height: 100%; }
 
     body {
       margin: 0;
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      background:
-        radial-gradient(circle at 0% 0%, var(--lavender-mist) 0%, transparent 45%),
-        radial-gradient(circle at 100% 0%, #f9f4ff 0%, transparent 40%),
-        var(--bg);
+      font-family: 'Century Gothic', 'Ubuntu', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
 
-    h1, h2, h3, h4 { font-family: 'Space Grotesk', 'Inter', sans-serif; }
+    h1, h2, h3, h4 { font-family: 'Century Gothic', 'Ubuntu', sans-serif; font-weight: 700; }
 
     button, select, input, textarea { font: inherit; color: inherit; }
 
     button {
-      border: 1px solid var(--border);
+      border: none;
       background: var(--surface);
       color: var(--text);
-      padding: 10px 14px;
+      padding: 10px 16px;
       border-radius: var(--radius-md);
       cursor: pointer;
       font-weight: 600;
-      letter-spacing: -0.005em;
-      transition: background var(--transition), border-color var(--transition), transform var(--transition), box-shadow var(--transition), color var(--transition);
+      transition: all var(--transition);
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      line-height: 1.2;
     }
 
     button:hover {
-      background: var(--lavender-mist);
-      border-color: var(--lavender);
-      transform: translateY(-1px);
+      background: var(--bg-deep);
     }
-    button:active { transform: translateY(0); }
-    button:focus-visible { outline: 3px solid var(--primary-glow); outline-offset: 2px; }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      background: var(--primary);
       color: #fff;
-      border-color: transparent;
-      box-shadow: 0 8px 18px rgba(76, 47, 156, 0.25);
     }
     .btn-primary:hover {
-      background: linear-gradient(135deg, var(--primary-dark), var(--primary-deep));
+      background: var(--primary-dark);
       color: #fff;
-      border-color: transparent;
-      box-shadow: 0 12px 24px rgba(46, 26, 111, 0.32);
     }
 
     .btn-ghost {
       background: transparent;
-      border-color: transparent;
-      color: var(--primary-dark);
+      color: var(--primary);
     }
     .btn-ghost:hover { background: var(--primary-soft); }
 
     .btn-soft {
       background: var(--primary-soft);
-      border-color: transparent;
       color: var(--primary-dark);
     }
-    .btn-soft:hover { background: var(--accent-soft); border-color: var(--lavender); }
+    .btn-soft:hover { background: #D8EAFC; }
 
     .btn-danger {
-      background: #fff;
-      color: var(--danger);
-      border-color: #fecaca;
+      background: #FA3E3E;
+      color: #fff;
     }
-    .btn-danger:hover { background: #fef2f2; border-color: #fca5a5; }
+    .btn-danger:hover { background: #E12D2D; }
 
     /* ====== TOP APP BAR ====== */
     .appbar {
       position: sticky;
       top: 0;
       z-index: 40;
-      background: linear-gradient(135deg, var(--primary-deep) 0%, var(--primary-dark) 45%, var(--primary) 100%);
-      color: #fff;
+      background: var(--surface);
+      color: var(--text);
       padding: 10px 22px;
       display: flex;
       align-items: center;
@@ -141,13 +123,7 @@
       backdrop-filter: blur(8px);
     }
 
-    .appbar::after {
-      content: "";
-      position: absolute;
-      left: 0; right: 0; bottom: -3px; height: 3px;
-      background: linear-gradient(90deg, transparent, var(--accent), var(--lavender), var(--accent), transparent);
-      opacity: .85;
-    }
+    
 
     .appbar-brand {
       display: flex;
@@ -176,6 +152,8 @@
       min-width: 0;
     }
     .appbar-title strong {
+      color: var(--primary);
+
       font-family: 'Space Grotesk', sans-serif;
       font-size: 15px;
       font-weight: 700;
@@ -197,31 +175,28 @@
       gap: 10px;
     }
 
+    
+    .services-wrap:hover .services-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+    .services-wrap:hover .services-trigger .chev {
+      transform: rotate(-135deg) translate(-2px, -2px);
+    }
     .services-trigger {
-      background: rgba(255,255,255,0.14);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.22);
-      padding: 9px 14px;
-      border-radius: 999px;
+      background: var(--bg);
+      color: var(--text);
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
       font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      transition: background var(--transition), border-color var(--transition), transform var(--transition);
+      cursor: pointer;
     }
     .services-trigger:hover {
-      background: rgba(255,255,255,0.22);
-      border-color: rgba(255,255,255,0.35);
-      transform: translateY(-1px);
+      background: var(--bg-deep);
     }
-    .services-trigger .chev {
-      width: 14px; height: 14px; display: inline-block;
-      border-right: 2px solid currentColor;
-      border-bottom: 2px solid currentColor;
-      transform: rotate(45deg) translate(-2px, -2px);
-      transition: transform var(--transition);
-    }
-    .services-trigger.open .chev { transform: rotate(-135deg) translate(-2px, -2px); }
+
 
     .services-wrap { position: relative; }
 
@@ -343,10 +318,7 @@
       align-self: start;
       position: sticky;
       top: 88px;
-      max-height: calc(100vh - 108px);
-      overflow: auto;
-      scrollbar-width: thin;
-      scrollbar-color: var(--lavender) transparent;
+      overflow: visible;
     }
     .panel::-webkit-scrollbar { width: 8px; }
     .panel::-webkit-scrollbar-thumb { background: var(--lavender); border-radius: 8px; }
@@ -775,6 +747,7 @@
       gap: 40px;
       padding: 40px 32px;
       align-items: center;
+      overflow: visible;
     }
 
     .login-brand {
@@ -1298,7 +1271,17 @@
     .sig-modal-actions button { flex: 1; min-width: 120px; }
 
     @media (max-width: 900px) {
-      .login-wrap { grid-template-columns: 1fr; gap: 24px; padding: 24px 16px; }
+      .login-wrap {
+      width: 100%;
+      max-width: 1280px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
+      padding: 40px 32px;
+      align-items: center;
+      overflow: visible;
+    }
       .login-brand { padding-right: 0; align-items: center; text-align: center; }
       .login-brand h1 { font-size: 26px; }
     }
@@ -1454,31 +1437,38 @@
     <div class="appbar-actions">
       <div class="services-wrap">
         <button type="button" class="services-trigger" id="btnServices" aria-haspopup="true" aria-expanded="false">
-          Servicios
+          Menú Opciones
           <span class="chev"></span>
         </button>
         <div class="services-menu" id="servicesMenu" role="menu">
+          <!-- Dropdown content: Servicios + Sesión -->
+          <div style="padding: 8px 12px; border-bottom: 1px solid var(--border); margin-bottom: 8px;">
+            <div style="font-weight: bold; font-size: 14px; margin-bottom: 4px;">Mi Cuenta</div>
+            <div id="sessionName" style="font-size: 13px; color: var(--muted);">—</div>
+            <div class="role-tag" id="sessionRole" style="display:inline-block; margin-top:4px; padding:2px 6px; border-radius:4px; background:var(--gold); color:#000; font-size:10px; font-weight:bold;">docente</div>
+          </div>
+          <div style="font-weight: bold; font-size: 12px; color: var(--muted); padding: 4px 12px;">Servicios</div>
           <button type="button" class="service-item active" data-service="serviceAttendance" role="menuitem">
-            <span class="icon">📋</span>
+            <span class="icon" style="background:var(--primary); color:#fff;">📋</span>
             <span class="meta">
               <b>Control de Asistencia Docente</b>
-              <span>Registro y firma de asistencia por fecha de clase, exportación e impresión.</span>
+              <span>Registro y firma de asistencia por fecha de clase.</span>
             </span>
           </button>
           <button type="button" class="service-item" data-service="serviceNovedades" role="menuitem">
-            <span class="icon">📝</span>
+            <span class="icon" style="background:var(--primary); color:#fff;">📝</span>
             <span class="meta">
-              <b>Reportes de Novedades de Calificación</b>
-              <span>Diligenciamiento y exportación del formato institucional de novedades.</span>
+              <b>Reportes de Novedades</b>
+              <span>Diligenciamiento del formato institucional.</span>
             </span>
           </button>
+          <div style="border-top: 1px solid var(--border); margin-top: 8px; padding-top: 8px;">
+            <button id="btnLogout" type="button" class="service-item" style="color: var(--danger);">
+               <span class="icon" style="background:#fdecea; color:var(--danger);">🚪</span>
+               <span class="meta"><b>Cerrar sesión</b></span>
+            </button>
+          </div>
         </div>
-      </div>
-
-      <div class="session-chip" id="sessionChip">
-        <span id="sessionName">—</span>
-        <span class="role-tag" id="sessionRole">docente</span>
-        <button id="btnLogout" type="button">Salir</button>
       </div>
     </div>
   </header>
@@ -1487,13 +1477,20 @@
   <section class="service-view active" id="serviceAttendance">
 
   <div class="service-actions hidden-print">
-    <span class="label">Asistencia ·</span>
-    <button class="btn-primary" id="btnPrint">Imprimir / Exportar PDF</button>
-    <button class="btn-soft" id="btnSave">Guardar borrador</button>
-    <button class="btn-soft" id="btnLoad">Cargar borrador</button>
-    <button class="btn-soft" id="btnExportJson">Exportar historial JSON</button>
-    <span class="divider"></span>
-    <button id="btnLoadSchedule">Cargar desde horario</button>
+    <div class="services-wrap" style="display: inline-block;">
+      <button class="services-trigger" aria-haspopup="true" aria-expanded="false" style="background: var(--primary); color: #fff;">
+        ⚙️ Opciones de Asistencia
+        <span class="chev" style="border-color: #fff;"></span>
+      </button>
+      <div class="services-menu" role="menu" style="left: 0; right: auto;">
+        <button class="service-item" id="btnPrint">🖨️ Imprimir / Exportar PDF</button>
+        <button class="service-item" id="btnSave">💾 Guardar borrador</button>
+        <button class="service-item" id="btnLoad">📂 Cargar borrador</button>
+        <button class="service-item" id="btnExportJson">📄 Exportar historial JSON</button>
+        <div style="border-top: 1px solid var(--border); margin: 4px 0;"></div>
+        <button class="service-item" id="btnLoadSchedule">📅 Cargar desde horario</button>
+      </div>
+    </div>
   </div>
 
   <div class="page">
@@ -1748,12 +1745,18 @@
   <section class="service-view" id="serviceNovedades">
 
     <div class="service-actions hidden-print">
-      <span class="label">Novedades ·</span>
-      <button class="btn-primary" id="btnNcPrint">Imprimir / Exportar PDF</button>
-      <button class="btn-soft" id="btnNcAddRow">＋ Agregar asignatura</button>
-      <button class="btn-soft" id="btnNcReset">Limpiar formato</button>
-      <span class="divider"></span>
-      <span class="small" style="color:var(--muted);">El archivo se nombrará <strong style="color:var(--primary-dark);">NC_&lt;fecha&gt;_&lt;código estudiante&gt;.pdf</strong></span>
+      <div class="services-wrap" style="display: inline-block;">
+        <button class="services-trigger" aria-haspopup="true" aria-expanded="false" style="background: var(--primary); color: #fff;">
+          ⚙️ Opciones de Novedades
+          <span class="chev" style="border-color: #fff;"></span>
+        </button>
+        <div class="services-menu" role="menu" style="left: 0; right: auto;">
+          <button class="service-item" id="btnNcPrint">🖨️ Imprimir / Exportar PDF</button>
+          <button class="service-item" id="btnNcAddRow">➕ Agregar asignatura</button>
+          <button class="service-item" id="btnNcReset">🧹 Limpiar formato</button>
+        </div>
+      </div>
+      <span class="small" style="color:var(--muted); margin-left: 12px; display:inline-block; vertical-align:middle;">El archivo se nombrará <strong style="color:var(--primary-dark);">NC_&lt;fecha&gt;_&lt;código estudiante&gt;.pdf</strong></span>
     </div>
 
     <div class="page" style="grid-template-columns: 1fr;">
