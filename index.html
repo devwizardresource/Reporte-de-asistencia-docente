@@ -1011,9 +1011,12 @@
 
     /* ====== NOVEDAD DE CALIFICACION ====== */
     #serviceNovedades .page {
-      grid-template-columns: 1fr;
-      justify-items: center;
-      max-width: calc(277mm + 56px);
+      display: grid;
+      grid-template-columns: minmax(0, 277mm) 320px;
+      align-items: start;
+      justify-content: center;
+      gap: 20px;
+      max-width: 1480px;
     }
     #serviceNovedades .nc-sheet {
       width: 277mm;
@@ -1137,6 +1140,11 @@
       appearance: auto;
       cursor: pointer;
     }
+    .nc-form .nc-field-center,
+    .nc-form input[type="date"],
+    .nc-form input[type="time"] {
+      text-align: center;
+    }
     .nc-form input[type="checkbox"] {
       width: 14px;
       height: 14px;
@@ -1229,14 +1237,97 @@
       vertical-align: bottom;
       padding-bottom: 3px;
     }
+    .nc-side-panel {
+      position: sticky;
+      top: 92px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      padding: 18px;
+      color: var(--text);
+    }
+    .nc-side-panel h2 {
+      margin: 0 0 14px;
+      color: var(--primary-deep);
+      font-size: 17px;
+      line-height: 1.2;
+    }
+    .nc-filter-field {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .nc-filter-field label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .nc-filter-field input,
+    .nc-filter-field select {
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      padding: 8px 10px;
+      font-size: 13px;
+      color: var(--text);
+    }
+    .nc-filter-field input:focus,
+    .nc-filter-field select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+    .nc-filter-actions {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .nc-filter-actions button {
+      width: 100%;
+      border-radius: var(--radius-sm);
+      min-height: 40px;
+    }
+    .nc-filter-summary {
+      margin-top: 14px;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      display: grid;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .nc-summary-line {
+      display: grid;
+      gap: 2px;
+    }
+    .nc-summary-line span:first-child {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .nc-summary-line span:last-child {
+      color: var(--text);
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
 
     @media (max-width: 1180px) {
       #serviceNovedades .page {
-        justify-items: start;
+        grid-template-columns: 1fr;
+        justify-items: center;
         overflow-x: auto;
       }
       .nc-sheet {
         min-width: 277mm;
+      }
+      .nc-side-panel {
+        position: static;
+        width: min(100%, 720px);
       }
     }
 
@@ -1814,7 +1905,6 @@
           <span class="chev" style="border-color: #fff;"></span>
         </button>
         <div class="services-menu" role="menu" style="left: 0; right: auto; min-width: 250px; max-width: calc(100vw - 40px);">
-          <button class="service-item" id="btnNcPrint">Imprimir / Exportar PDF</button>
           <button class="service-item" id="btnNcAddRow">+ Agregar asignatura</button>
           <button class="service-item" id="btnNcRemoveLast">- Quitar ultima</button>
           <button class="service-item" id="btnNcReset">Limpiar formato</button>
@@ -1868,11 +1958,11 @@
             <tr style="height:7mm;">
               <td class="nc-bold nc-wrap" rowspan="2" style="border-top:none; border-right:2px solid #000;">FECHA DE RECEPCIÓN:</td>
               <td rowspan="2" style="border-top:none; border-right:2px solid #000;">
-                <input type="date" id="ncFechaRecepcion" />
+                <input class="nc-field-center" type="date" id="ncFechaRecepcion" />
               </td>
               <td class="nc-bold nc-right nc-wrap" rowspan="2" style="border-top:none; border-right:2px solid #000;">FECHA REPORTE SAC:</td>
               <td rowspan="2" style="border-top:none; border-right:none;">
-                <input type="date" id="ncFechaSac" />
+                <input class="nc-field-center" type="date" id="ncFechaSac" />
               </td>
               <td rowspan="2" style="border:none; background:#fff;"></td>
               <td class="nc-bold nc-right" style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000;">MODIFICAR:</td>
@@ -1893,7 +1983,7 @@
             <tr style="height:7mm;">
               <td class="nc-bold" style="border-top:none; border-right:2px solid #000; white-space:nowrap;">NOMBRE DEL PROGRAMA:</td>
               <td class="nc-bold" style="border-top:none;">
-                <input type="text" id="ncPrograma" list="ncProgramas" value="[13010] PREGRADO EN GOBIERNO Y RELACIONES INTERNACIONALES" />
+                <input class="nc-field-center" type="text" id="ncPrograma" list="ncProgramas" value="[13010] PREGRADO EN GOBIERNO Y RELACIONES INTERNACIONALES" />
                 <datalist id="ncProgramas">
                   <option value="[13010] PREGRADO EN GOBIERNO Y RELACIONES INTERNACIONALES"></option>
                   <option value="[13015] MAESTRÍA EN GOBIERNO Y RELACIONES INTERNACIONALES"></option>
@@ -1917,12 +2007,12 @@
             <tr style="height:8mm;">
               <td class="nc-bold nc-right nc-wrap" style="border-top:none; border-right:2px solid #000; font-size:10.5pt; line-height:1.2;">PRIMER PERÍODO ACADÉMICO:</td>
               <td style="border-top:none; border-right:none;">
-                <input type="text" id="ncPeriodoP1" placeholder="Ej: 2026-1" />
+                <input class="nc-field-center" type="text" id="ncPeriodoP1" placeholder="Ej: 2026-1" />
               </td>
               <td style="border:none; background:#fff;"></td>
               <td class="nc-bold nc-right nc-wrap" style="border-top:none; border-right:2px solid #000; font-size:10.5pt; line-height:1.2;">SEGUNDO PERÍODO ACADÉMICO:</td>
               <td style="border-top:none; border-right:none;">
-                <input type="text" id="ncPeriodoP2" placeholder="Ej: 2026-2" />
+                <input class="nc-field-center" type="text" id="ncPeriodoP2" placeholder="Ej: 2026-2" />
               </td>
               <td style="border:none; background:#fff;"></td>
               <td class="nc-bold nc-right nc-wrap" style="border-top:none; border-right:2px solid #000; font-size:10.5pt; line-height:1.2;">PERÍODO INTERSEMESTRAL:</td>
@@ -1951,7 +2041,7 @@
               </td>
               <td class="nc-bold nc-right" style="border-top:none; border-left:2px solid #000; border-right:2px solid #000; white-space:nowrap;">CÓDIGO:</td>
               <td style="border-top:none;">
-                <input type="text" id="ncEstudianteCodigo" />
+                <input class="nc-field-center" type="text" id="ncEstudianteCodigo" />
               </td>
             </tr>
           </table>
@@ -2041,17 +2131,17 @@
             <tr style="height:7mm;">
               <td class="nc-bold" style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000; white-space:nowrap;">FECHA:</td>
               <td style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000;">
-                <input type="date" id="ncSupFecha" />
+                <input class="nc-field-center" type="date" id="ncSupFecha" />
               </td>
               <td style="border:none; background:#fff;"></td>
               <td class="nc-bold nc-right" style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000; white-space:nowrap;">HORA INICIAL:</td>
               <td style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000;">
-                <input type="time" id="ncSupHoraIni" />
+                <input class="nc-field-center" type="time" id="ncSupHoraIni" />
               </td>
               <td style="border:none; background:#fff;"></td>
               <td class="nc-bold nc-right" style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000; white-space:nowrap;">HORA FINAL:</td>
               <td style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000;">
-                <input type="time" id="ncSupHoraFin" />
+                <input class="nc-field-center" type="time" id="ncSupHoraFin" />
               </td>
               <td style="border-top:none; border-left:none; border-right:2px solid #000; border-bottom:2px solid #000;">&nbsp;</td>
             </tr>
@@ -2095,6 +2185,61 @@
 
         </div>
       </main>
+      <aside class="nc-side-panel nc-screen-only" aria-label="Filtros de novedades de calificación">
+        <h2>Filtro de docente</h2>
+
+        <div class="nc-filter-field">
+          <label for="ncFiltroDocente">Docente</label>
+          <select id="ncFiltroDocente">
+            <option value="">Todos los docentes</option>
+          </select>
+        </div>
+
+        <div class="nc-filter-field">
+          <label for="ncFiltroAsignatura">Asignatura</label>
+          <select id="ncFiltroAsignatura">
+            <option value="">Todas las asignaturas</option>
+          </select>
+        </div>
+
+        <div class="nc-filter-field">
+          <label for="ncFiltroCodigo">Código asignatura</label>
+          <input type="text" id="ncFiltroCodigo" list="ncCodigosAsignatura" />
+        </div>
+
+        <div class="nc-filter-field">
+          <label for="ncFiltroGrupo">Grupo</label>
+          <select id="ncFiltroGrupo">
+            <option value="">Todos los grupos</option>
+          </select>
+        </div>
+
+        <div class="nc-filter-actions">
+          <button type="button" class="btn-primary" id="btnNcPrint">Generar PDF</button>
+          <button type="button" class="btn-soft" id="btnNcApplyFilter">Cargar selección</button>
+          <button type="button" id="btnNcAddRowPanel">+ Agregar asignatura</button>
+          <button type="button" id="btnNcResetPanel">Limpiar formato</button>
+        </div>
+
+        <div class="nc-filter-summary" aria-live="polite">
+          <div class="nc-summary-line">
+            <span>Código</span>
+            <span id="ncResumenCodigo">-</span>
+          </div>
+          <div class="nc-summary-line">
+            <span>Asignatura</span>
+            <span id="ncResumenAsignatura">-</span>
+          </div>
+          <div class="nc-summary-line">
+            <span>Docente</span>
+            <span id="ncResumenDocente">-</span>
+          </div>
+          <div class="nc-summary-line">
+            <span>Grupo</span>
+            <span id="ncResumenGrupo">-</span>
+          </div>
+        </div>
+      </aside>
     </div>
 
   </section>
@@ -4369,6 +4514,132 @@
         });
       }
 
+      function panelEls() {
+        return {
+          docente: $("ncFiltroDocente"),
+          asignatura: $("ncFiltroAsignatura"),
+          codigo: $("ncFiltroCodigo"),
+          grupo: $("ncFiltroGrupo"),
+          resCodigo: $("ncResumenCodigo"),
+          resAsignatura: $("ncResumenAsignatura"),
+          resDocente: $("ncResumenDocente"),
+          resGrupo: $("ncResumenGrupo")
+        };
+      }
+
+      function makeOption(value, text) {
+        const opt = document.createElement("option");
+        opt.value = value;
+        opt.textContent = text;
+        return opt;
+      }
+
+      function uniqueSorted(values) {
+        return Array.from(new Set(values.filter(Boolean))).sort((a, b) => a.localeCompare(b, "es"));
+      }
+
+      function panelItems() {
+        const els = panelEls();
+        const docente = els.docente ? els.docente.value : "";
+        const codigo = els.codigo ? els.codigo.value.trim() : "";
+        const grupo = els.grupo ? els.grupo.value : "";
+
+        return horario()
+          .map((item, index) => Object.assign({ _index: index }, item))
+          .filter(item => !docente || item.docente === docente)
+          .filter(item => !codigo || (item.codigoMateria || "").toString().trim() === codigo)
+          .filter(item => !grupo || item.grupo === grupo);
+      }
+
+      function selectedPanelItem() {
+        const els = panelEls();
+        if (els.asignatura && els.asignatura.value !== "") {
+          const byIndex = horario()[Number(els.asignatura.value)];
+          if (byIndex) return byIndex;
+        }
+        const list = panelItems();
+        if (list.length) return list[0];
+        const code = els.codigo ? els.codigo.value : "";
+        const group = els.grupo ? els.grupo.value : "";
+        return findSubjectByCode(code, group);
+      }
+
+      function updatePanelSummary() {
+        const els = panelEls();
+        const item = selectedPanelItem();
+        const set = (el, value) => { if (el) el.textContent = value || "-"; };
+        set(els.resCodigo, item && item.codigoMateria);
+        set(els.resAsignatura, item && item.materia);
+        set(els.resDocente, item && item.docente);
+        set(els.resGrupo, item && item.grupo);
+      }
+
+      function populateSideFilters(keepValues) {
+        const els = panelEls();
+        if (!els.docente || !els.asignatura || !els.grupo) return;
+
+        const current = {
+          docente: keepValues ? els.docente.value : "",
+          asignatura: keepValues ? els.asignatura.value : "",
+          codigo: keepValues && els.codigo ? els.codigo.value : "",
+          grupo: keepValues ? els.grupo.value : ""
+        };
+
+        els.docente.innerHTML = "";
+        els.docente.appendChild(makeOption("", "Todos los docentes"));
+        uniqueSorted(horario().map(item => item.docente).filter(name => name && name !== "Sin docente asignado"))
+          .forEach(name => els.docente.appendChild(makeOption(name, name)));
+        els.docente.value = current.docente;
+        if (current.docente && els.docente.value !== current.docente) els.docente.value = "";
+
+        const base = horario()
+          .map((item, index) => Object.assign({ _index: index }, item))
+          .filter(item => !els.docente.value || item.docente === els.docente.value);
+
+        els.asignatura.innerHTML = "";
+        els.asignatura.appendChild(makeOption("", "Todas las asignaturas"));
+        base.forEach(item => {
+          const label = (item.codigoMateria || "") + " · " + (item.materia || "") + " · " + (item.grupo || "");
+          els.asignatura.appendChild(makeOption(String(item._index), label));
+        });
+        els.asignatura.value = current.asignatura;
+        if (current.asignatura && els.asignatura.value !== current.asignatura) els.asignatura.value = "";
+
+        if (els.codigo && keepValues) els.codigo.value = current.codigo;
+
+        const groupBase = base.filter(item => {
+          const code = els.codigo ? els.codigo.value.trim() : "";
+          return !code || (item.codigoMateria || "").toString().trim() === code;
+        });
+        els.grupo.innerHTML = "";
+        els.grupo.appendChild(makeOption("", "Todos los grupos"));
+        uniqueSorted(groupBase.map(item => item.grupo))
+          .forEach(group => els.grupo.appendChild(makeOption(group, group)));
+        els.grupo.value = current.grupo;
+        if (current.grupo && els.grupo.value !== current.grupo) els.grupo.value = "";
+
+        updatePanelSummary();
+      }
+
+      function applyPanelSelection() {
+        const item = selectedPanelItem();
+        if (!item) {
+          alert("Seleccione una asignatura válida.");
+          return;
+        }
+        let row = state.rows.find(r => !(r.codigo || r.asignatura || r.docente));
+        if (!row) {
+          row = emptyRow();
+          state.rows.push(row);
+        }
+        row.codigo = item.codigoMateria || "";
+        row.asignatura = item.materia || "";
+        row.grupo = item.grupo || "";
+        row.docente = item.docente || "";
+        render();
+        saveDraft();
+      }
+
       function findSubjectByCode(code, group) {
         const cleanCode = (code || "").toString().trim();
         if (!cleanCode) return null;
@@ -4462,6 +4733,7 @@
 
       function render() {
         refreshCodigoDatalist();
+        populateSideFilters(true);
         tbody.innerHTML = "";
         state.rows.forEach((row, i) => tbody.appendChild(renderRow(row, i)));
         resizeAllTextareas(tbody);
@@ -4587,12 +4859,45 @@
       const btnRemove = $("btnNcRemoveLast");
       const btnRemove2 = $("btnNcRemoveLast2");
       const btnReset = $("btnNcReset");
+      const btnAddPanel = $("btnNcAddRowPanel");
+      const btnResetPanel = $("btnNcResetPanel");
+      const btnApplyFilter = $("btnNcApplyFilter");
       if (btnPrint) btnPrint.addEventListener("click", printNC);
       if (btnAdd) btnAdd.addEventListener("click", addRow);
       if (btnAdd2) btnAdd2.addEventListener("click", addRow);
+      if (btnAddPanel) btnAddPanel.addEventListener("click", addRow);
       if (btnRemove) btnRemove.addEventListener("click", removeLastRow);
       if (btnRemove2) btnRemove2.addEventListener("click", removeLastRow);
       if (btnReset) btnReset.addEventListener("click", resetForm);
+      if (btnResetPanel) btnResetPanel.addEventListener("click", resetForm);
+      if (btnApplyFilter) btnApplyFilter.addEventListener("click", applyPanelSelection);
+
+      ["ncFiltroDocente", "ncFiltroAsignatura", "ncFiltroGrupo"].forEach(id => {
+        const el = $(id);
+        if (!el) return;
+        el.addEventListener("change", function () {
+          if (id === "ncFiltroGrupo") {
+            const subject = $("ncFiltroAsignatura");
+            if (subject) subject.value = "";
+          }
+          const selected = selectedPanelItem();
+          if (selected && id === "ncFiltroAsignatura") {
+            const code = $("ncFiltroCodigo");
+            const group = $("ncFiltroGrupo");
+            if (code) code.value = selected.codigoMateria || "";
+            if (group) group.value = selected.grupo || "";
+          }
+          populateSideFilters(true);
+        });
+      });
+      const codeFilter = $("ncFiltroCodigo");
+      if (codeFilter) {
+        codeFilter.addEventListener("input", function () {
+          const subject = $("ncFiltroAsignatura");
+          if (subject) subject.value = "";
+          populateSideFilters(true);
+        });
+      }
 
       fields.forEach(id => {
         const el = $(id);
@@ -4606,6 +4911,7 @@
       window.addEventListener("service:change", function (ev) {
         if (ev.detail && ev.detail.id === "serviceNovedades") {
           refreshCodigoDatalist();
+          populateSideFilters(true);
           setTimeout(() => resizeAllTextareas(document), 0);
         }
       });
@@ -4615,6 +4921,7 @@
 
       render();
       loadDraft();
+      populateSideFilters(true);
       setTimeout(() => resizeAllTextareas(document), 500);
     })();
   </script>
