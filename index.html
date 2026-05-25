@@ -1055,10 +1055,11 @@
       border: 2px solid #000;
       padding: 2px 4px;
       vertical-align: middle;
-      overflow: visible;
+      overflow: hidden;
       color: #000;
       font-family: Arial, Helvetica, sans-serif;
       font-size: 11pt;
+      line-height: 1.15;
     }
     .nc-t th {
       background: #efefef;
@@ -1145,6 +1146,11 @@
     .nc-form input[type="time"] {
       text-align: center;
     }
+    .nc-form-label {
+      white-space: normal !important;
+      overflow-wrap: anywhere;
+      line-height: 1.08 !important;
+    }
     .nc-form input[type="checkbox"] {
       width: 14px;
       height: 14px;
@@ -1180,7 +1186,26 @@
       text-align: center;
       font-size: 9.5pt !important;
     }
+    .nc-cal-table th {
+      padding: 1px 2px;
+      font-size: 7pt;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+      word-break: normal;
+      line-height: 1.08;
+    }
+    .nc-cal-table td {
+      padding: 2px 3px;
+    }
+    .nc-cal-table textarea,
+    .nc-cal-table input {
+      line-height: 1.12;
+    }
     .nc-cal-table .nc-text-left textarea { text-align: left; }
+    .nc-cal-table .nc-teacher-cell textarea,
+    .nc-cal-table .nc-subject-cell textarea {
+      font-size: 9pt;
+    }
     .nc-signature-cell {
       min-height: 8mm;
       background: #fff;
@@ -1956,11 +1981,11 @@
               <col style="width:11%">
             </colgroup>
             <tr style="height:7mm;">
-              <td class="nc-bold nc-wrap" rowspan="2" style="border-top:none; border-right:2px solid #000;">FECHA DE RECEPCIÓN:</td>
+              <td class="nc-bold nc-wrap nc-form-label" rowspan="2" style="border-top:none; border-right:2px solid #000;">FECHA DE<br>RECEPCIÓN:</td>
               <td rowspan="2" style="border-top:none; border-right:2px solid #000;">
                 <input class="nc-field-center" type="date" id="ncFechaRecepcion" />
               </td>
-              <td class="nc-bold nc-right nc-wrap" rowspan="2" style="border-top:none; border-right:2px solid #000;">FECHA REPORTE SAC:</td>
+              <td class="nc-bold nc-right nc-wrap nc-form-label" rowspan="2" style="border-top:none; border-right:2px solid #000;">FECHA REPORTE<br>SAC:</td>
               <td rowspan="2" style="border-top:none; border-right:none;">
                 <input class="nc-field-center" type="date" id="ncFechaSac" />
               </td>
@@ -1981,7 +2006,7 @@
           <table class="nc-t" style="border-top:none;">
             <colgroup><col style="width:21%"><col style="width:79%"></colgroup>
             <tr style="height:7mm;">
-              <td class="nc-bold" style="border-top:none; border-right:2px solid #000; white-space:nowrap;">NOMBRE DEL PROGRAMA:</td>
+              <td class="nc-bold nc-form-label" style="border-top:none; border-right:2px solid #000;">NOMBRE DEL PROGRAMA:</td>
               <td class="nc-bold" style="border-top:none;">
                 <input class="nc-field-center" type="text" id="ncPrograma" list="ncProgramas" value="[13010] PREGRADO EN GOBIERNO Y RELACIONES INTERNACIONALES" />
                 <datalist id="ncProgramas">
@@ -2031,13 +2056,13 @@
 
           <table class="nc-t" style="border-top:none;">
             <colgroup>
-              <col style="width:18%"><col style="width:59%">
-              <col style="width:9%"><col style="width:14%">
+              <col style="width:21%"><col style="width:55%">
+              <col style="width:10%"><col style="width:14%">
             </colgroup>
             <tr style="height:7mm;">
-              <td class="nc-bold" style="border-top:none; border-right:2px solid #000; white-space:nowrap;">NOMBRES Y APELLIDOS:</td>
+              <td class="nc-bold nc-form-label" style="border-top:none; border-right:2px solid #000;">NOMBRES Y<br>APELLIDOS:</td>
               <td style="border-top:none;">
-                <input type="text" id="ncEstudianteNombres" placeholder="Nombre completo del estudiante" />
+                <textarea class="nc-field-center" id="ncEstudianteNombres" rows="1" placeholder="Nombre completo del estudiante"></textarea>
               </td>
               <td class="nc-bold nc-right" style="border-top:none; border-left:2px solid #000; border-right:2px solid #000; white-space:nowrap;">CÓDIGO:</td>
               <td style="border-top:none;">
@@ -2066,9 +2091,9 @@
                 <th rowspan="2" style="border-top:none;">CÓDIGO<br>ASIG.</th>
                 <th rowspan="2" style="border-top:none;">NOMBRE ASIGNATURA</th>
                 <th rowspan="2" style="border-top:none;">GRUPO</th>
-                <th style="border-top:none;">CALIFICACIÓN</th>
-                <th style="border-top:none;">CALIFICACIÓN</th>
-                <th style="border-top:none;">CALIFICACIÓN</th>
+                <th style="border-top:none;">CALIF.<br>1</th>
+                <th style="border-top:none;">CALIF.<br>2</th>
+                <th style="border-top:none;">CALIF.<br>3</th>
                 <th rowspan="2" style="border-top:none;">SUPLETORIO</th>
                 <th rowspan="2" style="border-top:none;">CALIF. 100%<br>(SUFICIENCIA)</th>
                 <th rowspan="2" style="border-top:none;">CALIF.<br>EN LETRAS</th>
@@ -4685,7 +4710,7 @@
         tr.style.minHeight = "7mm";
         tr.innerHTML =
           '<td><input data-k="codigo" type="text" list="ncCodigosAsignatura" /></td>' +
-          '<td class="nc-text-left"><textarea data-k="asignatura" rows="1"></textarea></td>' +
+          '<td class="nc-text-left nc-subject-cell"><textarea data-k="asignatura" rows="1"></textarea></td>' +
           '<td><input data-k="grupo" type="text" /></td>' +
           '<td><input data-k="n1" type="text" inputmode="decimal" /></td>' +
           '<td><input data-k="n2" type="text" inputmode="decimal" /></td>' +
@@ -4693,7 +4718,7 @@
           '<td><input data-k="supletorio" type="text" inputmode="decimal" /></td>' +
           '<td><input data-k="cien" type="text" inputmode="decimal" /></td>' +
           '<td><textarea data-k="letras" rows="1"></textarea></td>' +
-          '<td class="nc-text-left"><textarea data-k="docente" rows="1"></textarea></td>' +
+          '<td class="nc-text-left nc-teacher-cell"><textarea data-k="docente" rows="1"></textarea></td>' +
           '<td class="nc-signature-cell">&nbsp;</td>' +
           '<td class="nc-actions-cell nc-screen-only">' +
             '<div class="nc-row-actions">' +
