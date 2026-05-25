@@ -1009,212 +1009,274 @@
       font-size: 12px;
     }
 
-    /* ====== NOVEDAD DE CALIFICACIÓN ====== */
-    .nc-sheet {
+    /* ====== NOVEDAD DE CALIFICACION ====== */
+    #serviceNovedades .page {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      max-width: calc(277mm + 56px);
+    }
+    #serviceNovedades .nc-sheet {
+      width: 277mm;
+      max-width: 100%;
+      padding: 4.5mm 5.5mm 3.5mm;
+      border-radius: 0;
+      background: #fff;
+      color: #000;
+      overflow: visible;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    #serviceNovedades .nc-sheet::before { display: none; }
+    .nc-form {
+      display: block;
+      color: #000;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11pt;
+    }
+    .nc-form table {
+      margin: 0;
+      border-radius: 0;
+      overflow: visible;
+      background: #fff;
+      font-size: 11pt;
+    }
+    .nc-t,
+    .nc-hdr,
+    .nc-meta-inner,
+    .nc-footer-signs {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .nc-t td,
+    .nc-t th {
+      border: 2px solid #000;
+      padding: 2px 4px;
+      vertical-align: middle;
+      overflow: visible;
+      color: #000;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11pt;
+    }
+    .nc-t th {
+      background: #efefef;
+      font-size: 8pt;
+      font-weight: bold;
+      line-height: 1.2;
+      text-align: center;
+    }
+    .nc-hdr td {
+      border: 2px solid #000;
+      padding: 2px 4px;
+      vertical-align: middle;
+      color: #000;
+    }
+    .nc-hdr-logo {
+      width: 22%;
+      height: 16mm;
+      text-align: center;
+    }
+    .nc-hdr-logo img {
+      max-width: 96%;
+      max-height: 54px;
+      object-fit: contain;
+    }
+    .nc-hdr-title {
+      width: 30%;
+      text-align: center;
+      font-size: 13pt;
+      font-weight: bold;
+      line-height: 1.3;
+    }
+    .nc-hdr-meta {
+      width: 48%;
       padding: 0;
     }
-    .nc-form {
-      display: grid;
-      gap: 18px;
+    .nc-meta-inner {
+      height: 100%;
     }
-    .nc-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 18px 20px;
-      box-shadow: var(--shadow-sm);
+    .nc-meta-inner td {
+      border: none;
+      border-right: 1px solid #999;
+      border-bottom: 1px solid #999;
+      padding: 3px 6px;
+      font-size: 11pt;
     }
-    .nc-card h3 {
-      margin: 0 0 12px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 13.5px;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      color: var(--primary-dark);
-      display: flex; align-items: center; gap: 10px;
+    .nc-meta-inner td:last-child { border-right: none; }
+    .nc-meta-inner tr:last-child td { border-bottom: none; }
+    .nc-lbl {
+      font-weight: bold;
+      white-space: nowrap;
     }
-    .nc-card h3::before {
-      content: "";
-      width: 6px; height: 18px;
-      border-radius: 4px;
-      background: linear-gradient(180deg, var(--primary), var(--accent));
+    .nc-bold { font-weight: bold; }
+    .nc-center { text-align: center; }
+    .nc-right { text-align: right; }
+    .nc-blue { background: #DEEAF6; }
+    .nc-wrap {
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
-
-    .nc-check-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    .nc-form input[type="text"],
+    .nc-form input[type="date"],
+    .nc-form input[type="time"],
+    .nc-form select,
+    .nc-form textarea {
+      width: 100%;
+      min-width: 0;
+      border: none;
+      outline: none;
+      background: transparent;
+      box-shadow: none;
+      border-radius: 0;
+      padding: 0 1px;
+      color: #000;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11pt;
     }
-    .nc-check {
-      position: relative;
+    .nc-form select {
+      appearance: auto;
+      cursor: pointer;
+    }
+    .nc-form input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      margin: 0;
+      accent-color: #000;
+      cursor: pointer;
+    }
+    .nc-form textarea {
+      display: block;
+      min-height: 5mm;
+      resize: none;
+      overflow: hidden;
+      line-height: 1.18;
+    }
+    .nc-form textarea:focus,
+    .nc-form input:focus,
+    .nc-form select:focus {
+      background: #fffde7;
+      box-shadow: inset 0 0 0 1px #555;
+    }
+    .nc-pct-input {
+      display: inline-block;
+      width: 28px !important;
+      text-align: center;
+      font-size: 9pt !important;
+      font-weight: bold;
+    }
+    .nc-cal-table textarea {
+      text-align: center;
+      font-size: 9.5pt;
+    }
+    .nc-cal-table input {
+      text-align: center;
+      font-size: 9.5pt !important;
+    }
+    .nc-cal-table .nc-text-left textarea { text-align: left; }
+    .nc-signature-cell {
+      min-height: 8mm;
+      background: #fff;
+    }
+    .nc-actions-cell {
+      text-align: center;
+      background: #fffde7;
+    }
+    .nc-row-actions {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+    }
+    .nc-icon-btn {
+      width: 22px;
+      height: 22px;
+      min-width: 22px;
+      padding: 0;
+      border: 1px solid #888;
+      border-radius: 3px;
+      background: #f5f5f5;
+      color: #000;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      line-height: 1;
+      font-weight: bold;
+    }
+    .nc-icon-btn:hover { background: #ddd; }
+    .nc-icon-btn.nc-minus {
+      border-color: #922b21;
+      color: #922b21;
+    }
+    .nc-add-floating {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 9px 14px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: var(--surface);
-      font-size: 12.5px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background var(--transition), border-color var(--transition), color var(--transition);
-      user-select: none;
+      margin-top: 6px;
     }
-    .nc-check input { display: none; }
-    .nc-check .dot {
-      width: 14px; height: 14px;
-      border-radius: 4px;
-      border: 2px solid var(--lavender);
-      display: inline-block;
-      transition: background var(--transition), border-color var(--transition);
-      position: relative;
+    .nc-firma-line {
+      width: 90%;
+      margin: 0 auto 4px;
+      border-top: 2px solid #000;
     }
-    .nc-check input:checked + .dot {
-      background: var(--primary);
-      border-color: var(--primary);
-    }
-    .nc-check input:checked + .dot::after {
-      content: "";
-      position: absolute;
-      left: 3px; top: 0px;
-      width: 4px; height: 8px;
-      border-right: 2px solid #fff;
-      border-bottom: 2px solid #fff;
-      transform: rotate(45deg);
-    }
-    .nc-check:has(input:checked) {
-      background: var(--primary-soft);
-      border-color: var(--lavender);
-      color: var(--primary-dark);
-    }
-
-    .nc-table-wrap { overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border); }
-    .nc-table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 980px;
-      font-size: 12px;
-    }
-    .nc-table th, .nc-table td {
-      border: 1px solid var(--border);
-      padding: 6px 8px;
+    .nc-firma-txt {
       text-align: center;
-      vertical-align: middle;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11pt;
+      font-weight: bold;
+      line-height: 1.4;
     }
-    .nc-table thead th {
-      background: linear-gradient(180deg, var(--primary-soft), var(--lavender-mist));
-      color: var(--primary-dark);
-      text-transform: uppercase;
-      font-size: 10px;
-      letter-spacing: .06em;
-      line-height: 1.3;
-    }
-    .nc-table tbody td { background: var(--surface); }
-    .nc-table input, .nc-table select {
-      width: 100%;
-      border: 1px solid transparent;
-      background: transparent;
-      padding: 6px 8px;
-      border-radius: 8px;
-      text-align: center;
-      font: inherit;
-      font-size: 12px;
-      color: var(--text);
-      transition: background var(--transition), border-color var(--transition);
-    }
-    .nc-table input:hover, .nc-table select:hover { background: var(--lavender-mist); }
-    .nc-table input:focus, .nc-table select:focus {
-      outline: none;
-      background: #fff;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--primary-glow);
-    }
-    .nc-table .row-actions {
-      display: flex;
-      gap: 4px;
-      justify-content: center;
-    }
-    .nc-table .row-del {
-      background: #fff;
-      border: 1px solid #fecaca;
-      color: var(--danger);
-      width: 26px; height: 26px;
-      padding: 0;
-      border-radius: 8px;
-      font-size: 14px;
-      line-height: 1;
-    }
-    .nc-table .row-del:hover { background: #fef2f2; }
-
-    .nc-row-add {
-      margin-top: 10px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .nc-instructions {
-      background: linear-gradient(180deg, #fff, var(--lavender-mist));
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 12px 14px;
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-    .nc-instructions ul { margin: 6px 0 0 18px; padding: 0; }
-    .nc-instructions li + li { margin-top: 4px; }
-
-    .nc-header {
-      display: grid;
-      grid-template-columns: 130px 1fr 230px;
-      gap: 18px;
-      align-items: center;
-      padding: 14px 20px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      background: linear-gradient(180deg, #fff, var(--lavender-mist));
-      margin-bottom: 0;
-    }
-    .nc-header .nc-logo {
-      width: 100%; height: 92px;
-      border-radius: var(--radius-md);
-      background: #ffffff;
+    .nc-footer-signs td {
       border: none;
-      display: flex; align-items: center; justify-content: center;
-      padding: 6px;
+      vertical-align: bottom;
+      padding-bottom: 3px;
     }
-    .nc-header .nc-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
-    .nc-header .nc-title h1 {
-      margin: 0;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 22px;
-      letter-spacing: .03em;
-      text-transform: uppercase;
-      color: var(--primary-deep);
-      line-height: 1.15;
-    }
-    .nc-header .nc-title p {
-      margin: 6px 0 0;
-      font-size: 12.5px;
-      color: var(--muted);
-    }
-    .nc-header .nc-meta {
-      font-size: 11px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      background: #fff;
-    }
-    .nc-header .nc-meta div {
-      padding: 6px 10px;
-      border-bottom: 1px solid var(--border);
-    }
-    .nc-header .nc-meta div:last-child { border-bottom: none; }
-    .nc-header .nc-meta strong { color: var(--primary-dark); }
 
-    @media (max-width: 900px) {
-      .nc-header { grid-template-columns: 1fr; }
+    @media (max-width: 1180px) {
+      #serviceNovedades .page {
+        justify-items: start;
+        overflow-x: auto;
+      }
+      .nc-sheet {
+        min-width: 277mm;
+      }
+    }
+
+    @media print {
+      @page { size: A4 landscape; margin: 0; }
+      body.print-only-nc #serviceNovedades .page {
+        display: flex;
+        justify-content: center;
+        width: 297mm;
+        max-width: none;
+        margin: 0;
+        padding: 0;
+      }
+      body.print-only-nc .nc-sheet {
+        width: 277mm;
+        max-width: none;
+        min-width: 0;
+        margin: 0 auto;
+        padding: 4.5mm 5.5mm 3.5mm;
+        border: none;
+        box-shadow: none;
+      }
+      body.print-only-nc .nc-screen-only,
+      body.print-only-nc .nc-col-actions,
+      body.print-only-nc .nc-actions-cell {
+        display: none !important;
+      }
+      body.print-only-nc .nc-form textarea,
+      body.print-only-nc .nc-form input,
+      body.print-only-nc .nc-form select {
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      body.print-only-nc .nc-t td,
+      body.print-only-nc .nc-t th {
+        padding: 2px 4px;
+      }
+      body.print-only-nc .nc-cal-table textarea {
+        font-size: 8.7pt;
+      }
     }
 
     .sig-modal {
@@ -1745,181 +1807,291 @@
   <!-- ====== SERVICIO 2: Novedades de Calificación ====== -->
   <section class="service-view" id="serviceNovedades">
 
-    <div class="service-actions hidden-print">
+    <div class="service-actions hidden-print nc-screen-only">
       <div class="services-wrap" style="display: inline-block;">
         <button class="services-trigger" aria-haspopup="true" aria-expanded="false" style="background: var(--primary); color: #fff;">
-          ⚙️ Opciones de Novedades
+          Opciones de Novedades
           <span class="chev" style="border-color: #fff;"></span>
         </button>
         <div class="services-menu" role="menu" style="left: 0; right: auto; min-width: 250px; max-width: calc(100vw - 40px);">
-          <button class="service-item" id="btnNcPrint">🖨️ Imprimir / Exportar PDF</button>
-          <button class="service-item" id="btnNcAddRow">➕ Agregar asignatura</button>
-          <button class="service-item" id="btnNcReset">🧹 Limpiar formato</button>
+          <button class="service-item" id="btnNcPrint">Imprimir / Exportar PDF</button>
+          <button class="service-item" id="btnNcAddRow">+ Agregar asignatura</button>
+          <button class="service-item" id="btnNcRemoveLast">- Quitar ultima</button>
+          <button class="service-item" id="btnNcReset">Limpiar formato</button>
         </div>
       </div>
       <span class="small" style="color:var(--muted); margin-left: 12px; display:inline-block; vertical-align:middle;">El archivo se nombrará <strong style="color:var(--primary-dark);">NC_&lt;fecha&gt;_&lt;código estudiante&gt;.pdf</strong></span>
     </div>
 
-    <div class="page" style="grid-template-columns: 1fr;">
+    <div class="page nc-page-wrap">
       <main class="sheet nc-sheet" id="sheetNovedad">
         <div class="nc-form">
 
-          <div class="nc-header">
-            <div class="nc-logo">
-              <img alt="Universidad Santo Tomás Bogotá" src="resources/Logo_Santoto_Bogota.png" />
-            </div>
-            <div class="nc-title">
-              <h1>Novedad de Calificaciones</h1>
-              <p>Facultad de Gobierno y Relaciones Internacionales · Formato institucional editable</p>
-            </div>
-            <div class="nc-meta">
-              <div><strong>Código:</strong> EA-BO-F-028</div>
-              <div><strong>Versión:</strong> 02</div>
-              <div><strong>Emisión:</strong> 18-06-2024</div>
-              <div><strong>Página:</strong> 1 de 1</div>
-            </div>
-          </div>
-
-          <div class="nc-card">
-            <h3>Tipo de novedad y recepción</h3>
-            <div class="grid-2">
-              <div>
-                <label class="small" style="font-weight:700; text-transform:uppercase; color:var(--muted);">Acción</label>
-                <div class="nc-check-group" style="margin-top:6px;">
-                  <label class="nc-check"><input type="checkbox" id="ncAccionModificar"><span class="dot"></span>Modificar</label>
-                  <label class="nc-check"><input type="checkbox" id="ncAccionIncluir"><span class="dot"></span>Incluir</label>
-                </div>
-              </div>
-              <div class="grid-2" style="margin-bottom:0;">
-                <div class="field">
-                  <label>Fecha de recepción</label>
-                  <input type="date" id="ncFechaRecepcion" />
-                </div>
-                <div class="field">
-                  <label>Fecha reporte SAC</label>
-                  <input type="date" id="ncFechaSac" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="nc-card">
-            <h3>Programa y periodo académico</h3>
-            <div class="field">
-              <label>Nombre del programa</label>
-              <input type="text" id="ncPrograma" value="[13010] PREGRADO EN GOBIERNO Y RELACIONES INTERNACIONALES" />
-            </div>
-            <div>
-              <label class="small" style="font-weight:700; text-transform:uppercase; color:var(--muted);">Periodo</label>
-              <div class="nc-check-group" style="margin-top:6px;">
-                <label class="nc-check"><input type="checkbox" id="ncPeriodoP1"><span class="dot"></span>Primer período académico</label>
-                <label class="nc-check"><input type="checkbox" id="ncPeriodoP2"><span class="dot"></span>Segundo período académico</label>
-                <label class="nc-check"><input type="checkbox" id="ncPeriodoInter"><span class="dot"></span>Período intersemestral</label>
-              </div>
-            </div>
-          </div>
-
-          <div class="nc-card">
-            <h3>Datos del estudiante</h3>
-            <div class="grid-2">
-              <div class="field">
-                <label>Nombres y apellidos</label>
-                <input type="text" id="ncEstudianteNombres" placeholder="Nombres y apellidos completos" />
-              </div>
-              <div class="field">
-                <label>Código del estudiante</label>
-                <input type="text" id="ncEstudianteCodigo" placeholder="Ej: 2226543" />
-              </div>
-            </div>
-          </div>
-
-          <div class="nc-card">
-            <h3>Calificaciones</h3>
-            <div class="nc-table-wrap">
-              <table class="nc-table" id="ncTabla">
-                <thead>
+          <table class="nc-hdr">
+            <colgroup>
+              <col style="width:22%"><col style="width:30%"><col style="width:48%">
+            </colgroup>
+            <tr>
+              <td class="nc-hdr-logo">
+                <img alt="Universidad Santo Tomás Bogotá" src="resources/Logo_Santoto_Bogota.png" />
+              </td>
+              <td class="nc-hdr-title">NOVEDAD DE<br>CALIFICACIONES</td>
+              <td class="nc-hdr-meta">
+                <table class="nc-meta-inner">
                   <tr>
-                    <th rowspan="2">Código asignatura</th>
-                    <th rowspan="2">Nombre asignatura</th>
-                    <th rowspan="2">Grupo</th>
-                    <th colspan="3">Calificaciones parciales</th>
-                    <th rowspan="2">Supletorio / 100% (suficiencia)</th>
-                    <th rowspan="2">Calificación en letras</th>
-                    <th rowspan="2">Docente</th>
-                    <th rowspan="2" style="width:40px;">Acciones</th>
+                    <td class="nc-lbl" style="width:22%;">Código:</td>
+                    <td style="width:28%;">EA-BO-F-028</td>
+                    <td class="nc-lbl" style="width:22%;">Versión:</td>
+                    <td style="width:28%;">02</td>
                   </tr>
                   <tr>
-                    <th>30%</th>
-                    <th>30%</th>
-                    <th>40%</th>
+                    <td class="nc-lbl">Emisión:</td>
+                    <td>18-06-2024</td>
+                    <td class="nc-lbl">Página:</td>
+                    <td>1 de 1</td>
                   </tr>
-                </thead>
-                <tbody id="ncTablaBody"></tbody>
-              </table>
-            </div>
-            <div class="nc-row-add">
-              <button type="button" class="btn-soft" id="btnNcAddRow2">＋ Agregar fila</button>
-              <span class="small">Puede agregar varias asignaturas en una misma novedad.</span>
-            </div>
-          </div>
+                </table>
+              </td>
+            </tr>
+          </table>
 
-          <div class="nc-card">
-            <h3>Observaciones</h3>
-            <div class="field">
-              <textarea id="ncObservaciones" placeholder="Justificación, motivo de la modificación o aclaraciones para el reporte SAC."></textarea>
-            </div>
-          </div>
+          <table class="nc-t" style="border-top:none;">
+            <colgroup>
+              <col style="width:16%">
+              <col style="width:14%">
+              <col style="width:17%">
+              <col style="width:13%">
+              <col style="width:1%">
+              <col style="width:28%">
+              <col style="width:11%">
+            </colgroup>
+            <tr style="height:7mm;">
+              <td class="nc-bold nc-wrap" rowspan="2" style="border-top:none; border-right:2px solid #000;">FECHA DE RECEPCIÓN:</td>
+              <td rowspan="2" style="border-top:none; border-right:2px solid #000;">
+                <input type="date" id="ncFechaRecepcion" />
+              </td>
+              <td class="nc-bold nc-right nc-wrap" rowspan="2" style="border-top:none; border-right:2px solid #000;">FECHA REPORTE SAC:</td>
+              <td rowspan="2" style="border-top:none; border-right:none;">
+                <input type="date" id="ncFechaSac" />
+              </td>
+              <td rowspan="2" style="border:none; background:#fff;"></td>
+              <td class="nc-bold nc-right" style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000;">MODIFICAR:</td>
+              <td class="nc-center" style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000;">
+                <input type="checkbox" id="ncAccionModificar" />
+              </td>
+            </tr>
+            <tr style="height:7mm;">
+              <td class="nc-bold nc-right" style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000;">INCLUIR:</td>
+              <td class="nc-center" style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000;">
+                <input type="checkbox" id="ncAccionIncluir" />
+              </td>
+            </tr>
+          </table>
 
-          <div class="nc-card">
-            <h3>Para supletorio o examen de suficiencia</h3>
-            <div class="grid-3">
-              <div class="field">
-                <label>Fecha</label>
+          <table class="nc-t" style="border-top:none;">
+            <colgroup><col style="width:21%"><col style="width:79%"></colgroup>
+            <tr style="height:7mm;">
+              <td class="nc-bold" style="border-top:none; border-right:2px solid #000; white-space:nowrap;">NOMBRE DEL PROGRAMA:</td>
+              <td class="nc-bold" style="border-top:none;">
+                <input type="text" id="ncPrograma" list="ncProgramas" value="[13010] PREGRADO EN GOBIERNO Y RELACIONES INTERNACIONALES" />
+                <datalist id="ncProgramas">
+                  <option value="[13010] PREGRADO EN GOBIERNO Y RELACIONES INTERNACIONALES"></option>
+                  <option value="[13015] MAESTRÍA EN GOBIERNO Y RELACIONES INTERNACIONALES"></option>
+                </datalist>
+              </td>
+            </tr>
+          </table>
+
+          <table class="nc-t" style="border-top:none;">
+            <colgroup>
+              <col style="width:19%">
+              <col style="width:11%">
+              <col style="width:1%">
+              <col style="width:19%">
+              <col style="width:11%">
+              <col style="width:1%">
+              <col style="width:17%">
+              <col style="width:5%">
+              <col style="width:16%">
+            </colgroup>
+            <tr style="height:8mm;">
+              <td class="nc-bold nc-right nc-wrap" style="border-top:none; border-right:2px solid #000; font-size:10.5pt; line-height:1.2;">PRIMER PERÍODO ACADÉMICO:</td>
+              <td style="border-top:none; border-right:none;">
+                <input type="text" id="ncPeriodoP1" placeholder="Ej: 2026-1" />
+              </td>
+              <td style="border:none; background:#fff;"></td>
+              <td class="nc-bold nc-right nc-wrap" style="border-top:none; border-right:2px solid #000; font-size:10.5pt; line-height:1.2;">SEGUNDO PERÍODO ACADÉMICO:</td>
+              <td style="border-top:none; border-right:none;">
+                <input type="text" id="ncPeriodoP2" placeholder="Ej: 2026-2" />
+              </td>
+              <td style="border:none; background:#fff;"></td>
+              <td class="nc-bold nc-right nc-wrap" style="border-top:none; border-right:2px solid #000; font-size:10.5pt; line-height:1.2;">PERÍODO INTERSEMESTRAL:</td>
+              <td class="nc-center" style="border-top:none; border-right:2px solid #000;">
+                <input type="checkbox" id="ncPeriodoInter" />
+              </td>
+              <td style="border-top:none; border-left:none; border-right:2px solid #000; border-bottom:2px solid #000;">&nbsp;</td>
+            </tr>
+          </table>
+
+          <table class="nc-t" style="border-top:none;">
+            <tr style="height:6mm;">
+              <td class="nc-blue nc-bold nc-center" style="border-top:none;">DATOS DEL ESTUDIANTE</td>
+            </tr>
+          </table>
+
+          <table class="nc-t" style="border-top:none;">
+            <colgroup>
+              <col style="width:18%"><col style="width:59%">
+              <col style="width:9%"><col style="width:14%">
+            </colgroup>
+            <tr style="height:7mm;">
+              <td class="nc-bold" style="border-top:none; border-right:2px solid #000; white-space:nowrap;">NOMBRES Y APELLIDOS:</td>
+              <td style="border-top:none;">
+                <input type="text" id="ncEstudianteNombres" placeholder="Nombre completo del estudiante" />
+              </td>
+              <td class="nc-bold nc-right" style="border-top:none; border-left:2px solid #000; border-right:2px solid #000; white-space:nowrap;">CÓDIGO:</td>
+              <td style="border-top:none;">
+                <input type="text" id="ncEstudianteCodigo" />
+              </td>
+            </tr>
+          </table>
+
+          <table class="nc-t nc-cal-table" style="border-top:none;" id="ncTabla">
+            <colgroup>
+              <col style="width:8%">
+              <col style="width:14.5%">
+              <col style="width:6.5%">
+              <col style="width:6%">
+              <col style="width:6%">
+              <col style="width:6%">
+              <col style="width:8%">
+              <col style="width:10%">
+              <col style="width:9%">
+              <col style="width:11%">
+              <col style="width:10%">
+              <col class="nc-col-actions" style="width:5%">
+            </colgroup>
+            <thead>
+              <tr>
+                <th rowspan="2" style="border-top:none;">CÓDIGO<br>ASIG.</th>
+                <th rowspan="2" style="border-top:none;">NOMBRE ASIGNATURA</th>
+                <th rowspan="2" style="border-top:none;">GRUPO</th>
+                <th style="border-top:none;">CALIFICACIÓN</th>
+                <th style="border-top:none;">CALIFICACIÓN</th>
+                <th style="border-top:none;">CALIFICACIÓN</th>
+                <th rowspan="2" style="border-top:none;">SUPLETORIO</th>
+                <th rowspan="2" style="border-top:none;">CALIF. 100%<br>(SUFICIENCIA)</th>
+                <th rowspan="2" style="border-top:none;">CALIF.<br>EN LETRAS</th>
+                <th rowspan="2" style="border-top:none;">DOCENTE</th>
+                <th rowspan="2" style="border-top:none;">FIRMA<br>DOCENTE</th>
+                <th rowspan="2" class="nc-col-actions nc-screen-only" style="border-top:none; background:#fffde7;">+ / -</th>
+              </tr>
+              <tr>
+                <td style="border-top:none; background:#efefef; text-align:center; font-size:9pt; padding:1px 2px;">
+                  <input class="nc-pct-input" type="text" id="ncPct1" value="30" /> %
+                </td>
+                <td style="border-top:none; background:#efefef; text-align:center; font-size:9pt; padding:1px 2px;">
+                  <input class="nc-pct-input" type="text" id="ncPct2" value="30" /> %
+                </td>
+                <td style="border-top:none; background:#efefef; text-align:center; font-size:9pt; padding:1px 2px;">
+                  <input class="nc-pct-input" type="text" id="ncPct3" value="40" /> %
+                </td>
+              </tr>
+            </thead>
+            <tbody id="ncTablaBody"></tbody>
+          </table>
+
+          <div class="nc-add-floating nc-screen-only">
+            <button type="button" class="nc-icon-btn" id="btnNcAddRow2" title="Agregar asignatura">+</button>
+            <button type="button" class="nc-icon-btn nc-minus" id="btnNcRemoveLast2" title="Quitar ultima asignatura">-</button>
+          </div>
+          <datalist id="ncCodigosAsignatura"></datalist>
+
+          <table class="nc-t" style="border-top:none;">
+            <colgroup><col style="width:14%"><col style="width:86%"></colgroup>
+            <tr style="height:5mm;">
+              <td class="nc-bold" style="border-top:none; border-bottom:2px solid #000; border-right:2px solid #000;">OBSERVACIONES:</td>
+              <td style="border-top:none; border-bottom:2px solid #000;">&nbsp;</td>
+            </tr>
+            <tr style="height:18mm;">
+              <td colspan="2" style="border-top:none; vertical-align:top; padding:3px 6px;">
+                <textarea id="ncObservaciones" placeholder="Escriba aquí las observaciones..."></textarea>
+              </td>
+            </tr>
+          </table>
+
+          <table class="nc-t" style="border-top:none;">
+            <tr style="height:5mm;">
+              <td class="nc-bold" style="border-top:none; border-bottom:none;">PARA SUPLETORIO O EXAMEN DE SUFICIENCIA</td>
+            </tr>
+          </table>
+
+          <table class="nc-t" style="border-top:none;">
+            <colgroup>
+              <col style="width:6%">
+              <col style="width:11%">
+              <col style="width:2%">
+              <col style="width:11%">
+              <col style="width:9%">
+              <col style="width:2%">
+              <col style="width:10%">
+              <col style="width:9%">
+              <col style="width:40%">
+            </colgroup>
+            <tr style="height:7mm;">
+              <td class="nc-bold" style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000; white-space:nowrap;">FECHA:</td>
+              <td style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000;">
                 <input type="date" id="ncSupFecha" />
-              </div>
-              <div class="field">
-                <label>Hora inicial</label>
+              </td>
+              <td style="border:none; background:#fff;"></td>
+              <td class="nc-bold nc-right" style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000; white-space:nowrap;">HORA INICIAL:</td>
+              <td style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000;">
                 <input type="time" id="ncSupHoraIni" />
-              </div>
-              <div class="field">
-                <label>Hora final</label>
+              </td>
+              <td style="border:none; background:#fff;"></td>
+              <td class="nc-bold nc-right" style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000; white-space:nowrap;">HORA FINAL:</td>
+              <td style="border-top:none; border-right:2px solid #000; border-bottom:2px solid #000;">
                 <input type="time" id="ncSupHoraFin" />
-              </div>
-            </div>
-          </div>
+              </td>
+              <td style="border-top:none; border-left:none; border-right:2px solid #000; border-bottom:2px solid #000;">&nbsp;</td>
+            </tr>
+          </table>
 
-          <div class="nc-card">
-            <h3>Instrucciones</h3>
-            <div class="nc-instructions">
-              <strong>Nota:</strong>
-              <ul>
-                <li>Incluir únicamente los estudiantes debidamente matriculados.</li>
-                <li>Las calificaciones no deben tener enmendaduras o tachones.</li>
-                <li>Diligenciar todos los campos; si algún aspecto no aplica, escriba <strong>N.A.</strong></li>
-                <li>Indicar los porcentajes a evaluar en la casilla "Nota".</li>
-              </ul>
-            </div>
-          </div>
+          <table class="nc-t" style="border-top:none;">
+            <colgroup>
+              <col style="width:6%"><col style="width:47%"><col style="width:47%">
+            </colgroup>
+            <tr style="height:5mm;">
+              <td class="nc-bold" rowspan="2" style="border-top:none;">NOTA:</td>
+              <td style="border-top:none; border-bottom:none; padding:1px 5px; font-size:10pt;">- Incluir únicamente los estudiantes debidamente matriculados.</td>
+              <td style="border-top:none; border-bottom:none; border-left:2px solid #000; padding:1px 5px; font-size:10pt;">- Las calificaciones no deben tener enmendaduras o tachones.</td>
+            </tr>
+            <tr style="height:5mm;">
+              <td style="border-top:none; padding:1px 5px; font-size:10pt;">- Diligenciar todos los campos; si algún aspecto no aplica, escribir (N.A.).</td>
+              <td style="border-top:none; border-left:2px solid #000; padding:1px 5px; font-size:10pt;">- Indicar los porcentajes a evaluar en la casilla "Nota".</td>
+            </tr>
+          </table>
 
-          <div class="nc-card">
-            <h3>Firmas de aprobación</h3>
-            <div class="footer-signs" style="margin-top:6px;">
-              <div>
-                <div class="field">
-                  <label>V°B° Director(a) de División / Departamento</label>
-                  <input type="text" id="ncFirmaDirector" placeholder="Nombre completo" />
-                </div>
-                <div class="line" style="margin-top:48px;">V°B° Director de División / Director(a) de Departamento</div>
-              </div>
-              <div>
-                <div class="field">
-                  <label>V°B° Decano(a) de Facultad / Secretario(a) de División</label>
-                  <input type="text" id="ncFirmaDecano" placeholder="Nombre completo" />
-                </div>
-                <div class="line" style="margin-top:48px;">V°B° Decano(a) de Facultad / Secretario(a) de División</div>
-              </div>
-            </div>
-          </div>
+          <table class="nc-footer-signs" style="margin-top:6mm;">
+            <colgroup>
+              <col style="width:3%"><col style="width:43%">
+              <col style="width:8%">
+              <col style="width:43%"><col style="width:3%">
+            </colgroup>
+            <tr style="height:24mm;">
+              <td></td>
+              <td>
+                <div class="nc-firma-line"></div>
+                <div class="nc-firma-txt">V°B° DIRECTOR DE DIVISIÓN /<br>DIRECTOR(A) DE DEPARTAMENTO</div>
+              </td>
+              <td></td>
+              <td>
+                <div class="nc-firma-line"></div>
+                <div class="nc-firma-txt">V°B° DECANO(A) DE FACULTAD /<br>SECRETARIO(A) DE DIVISIÓN</div>
+              </td>
+              <td></td>
+            </tr>
+          </table>
 
         </div>
       </main>
@@ -2387,6 +2559,13 @@
       });
 
       let entered = false;
+      function notifyActiveServiceReady() {
+        setTimeout(() => {
+          const active = document.querySelector(".service-view.active");
+          if (active) window.dispatchEvent(new CustomEvent("service:change", { detail: { id: active.id } }));
+        }, 0);
+      }
+
       function enterApp(session) {
         if (entered) return;
         entered = true;
@@ -2395,12 +2574,14 @@
         window.CURRENT_SESSION = session;
         if (typeof window.bootApp === "function") {
           window.bootApp();
+          notifyActiveServiceReady();
         } else {
           // Esperar a que el IIFE principal defina bootApp
           const wait = setInterval(() => {
             if (typeof window.bootApp === "function") {
               clearInterval(wait);
               window.bootApp();
+              notifyActiveServiceReady();
             }
           }, 20);
         }
@@ -3030,6 +3211,8 @@
         });
       }
       aplicarAsignaciones();
+
+      window.DATASET_HORARIO = datasetHorario;
 
       // Exponer lista de docentes para el formulario de registro
       window.DATASET_DOCENTES = Array.from(new Set(
@@ -4026,6 +4209,7 @@
         // Asignaciones: afectan el selector y las vinculaciones.
         const cambioAsignaciones = await hydrateAssignmentsFromCloud();
         if (cambioAsignaciones) {
+          window.DATASET_HORARIO = datasetHorario;
           window.DATASET_DOCENTES = Array.from(new Set(
             datasetHorario.map(d => d.docente).filter(n => n && n !== "Sin docente asignado")
           ));
@@ -4039,6 +4223,7 @@
       window.bootApp = function () {
         currentUser = window.CURRENT_SESSION || null;
         aplicarAsignaciones();
+        window.DATASET_HORARIO = datasetHorario;
         window.DATASET_DOCENTES = Array.from(new Set(
           datasetHorario.map(d => d.docente).filter(n => n && n !== "Sin docente asignado")
         ));
@@ -4131,53 +4316,155 @@
       if (!tbody) return;
 
       const fields = [
-        "ncFechaRecepcion", "ncFechaSac", "ncPrograma",
+        "ncFechaRecepcion", "ncFechaSac", "ncPrograma", "ncPeriodoP1", "ncPeriodoP2",
         "ncEstudianteNombres", "ncEstudianteCodigo",
         "ncObservaciones", "ncSupFecha", "ncSupHoraIni", "ncSupHoraFin",
-        "ncFirmaDirector", "ncFirmaDecano"
+        "ncPct1", "ncPct2", "ncPct3"
       ];
-      const checks = ["ncAccionModificar", "ncAccionIncluir", "ncPeriodoP1", "ncPeriodoP2", "ncPeriodoInter"];
+      const checks = ["ncAccionModificar", "ncAccionIncluir", "ncPeriodoInter"];
 
       function emptyRow() {
-        return { codigo: "", asignatura: "", grupo: "", n1: "", n2: "", n3: "", supletorio: "", letras: "", docente: "" };
+        return { codigo: "", asignatura: "", grupo: "", n1: "", n2: "", n3: "", supletorio: "", cien: "", letras: "", docente: "" };
+      }
+
+      function normalizeRow(row) {
+        const base = emptyRow();
+        const merged = Object.assign(base, row || {});
+        if (!merged.cien && merged.s100) merged.cien = merged.s100;
+        delete merged.s100;
+        return merged;
+      }
+
+      function norm(text) {
+        return (text || "").toString().trim().toLowerCase();
+      }
+
+      function horario() {
+        return Array.isArray(window.DATASET_HORARIO) ? window.DATASET_HORARIO : [];
+      }
+
+      function resizeTextarea(el) {
+        if (!el || el.tagName !== "TEXTAREA") return;
+        el.style.height = "auto";
+        el.style.height = Math.max(el.scrollHeight, 20) + "px";
+      }
+
+      function resizeAllTextareas(root) {
+        (root || document).querySelectorAll("#serviceNovedades textarea").forEach(resizeTextarea);
+      }
+
+      function refreshCodigoDatalist() {
+        const list = $("ncCodigosAsignatura");
+        if (!list) return;
+        const seen = new Set();
+        list.innerHTML = "";
+        horario().forEach(item => {
+          const code = (item.codigoMateria || "").toString().trim();
+          if (!code || seen.has(code + "||" + item.grupo + "||" + item.docente)) return;
+          seen.add(code + "||" + item.grupo + "||" + item.docente);
+          const opt = document.createElement("option");
+          opt.value = code;
+          opt.label = code + " · " + (item.materia || "") + " · " + (item.grupo || "") + " · " + (item.docente || "");
+          list.appendChild(opt);
+        });
+      }
+
+      function findSubjectByCode(code, group) {
+        const cleanCode = (code || "").toString().trim();
+        if (!cleanCode) return null;
+        const matches = horario().filter(item => (item.codigoMateria || "").toString().trim() === cleanCode);
+        if (!matches.length) return null;
+
+        const cleanGroup = norm(group);
+        if (cleanGroup) {
+          const sameGroup = matches.find(item => norm(item.grupo) === cleanGroup);
+          if (sameGroup) return sameGroup;
+        }
+
+        const currentName = window.CURRENT_SESSION && window.CURRENT_SESSION.nombre;
+        if (currentName) {
+          const sameTeacher = matches.find(item => norm(item.docente) === norm(currentName));
+          if (sameTeacher) return sameTeacher;
+        }
+
+        return matches.find(item => item.docente && item.docente !== "Sin docente asignado") || matches[0];
+      }
+
+      function syncRowControls(tr, row, keys) {
+        (keys || Object.keys(row)).forEach(k => {
+          const input = tr.querySelector('[data-k="' + k + '"]');
+          if (!input) return;
+          input.value = row[k] || "";
+          resizeTextarea(input);
+        });
+      }
+
+      function autocompleteSubject(row, tr) {
+        const match = findSubjectByCode(row.codigo, row.grupo);
+        if (!match) return false;
+        row.asignatura = match.materia || row.asignatura;
+        row.grupo = match.grupo || row.grupo;
+        row.docente = match.docente || row.docente;
+        syncRowControls(tr, row, ["asignatura", "grupo", "docente"]);
+        return true;
       }
 
       function renderRow(row, index) {
         const tr = document.createElement("tr");
+        tr.style.minHeight = "7mm";
         tr.innerHTML =
-          '<td><input data-k="codigo" type="text" /></td>' +
-          '<td style="text-align:left;"><input data-k="asignatura" type="text" /></td>' +
+          '<td><input data-k="codigo" type="text" list="ncCodigosAsignatura" /></td>' +
+          '<td class="nc-text-left"><textarea data-k="asignatura" rows="1"></textarea></td>' +
           '<td><input data-k="grupo" type="text" /></td>' +
           '<td><input data-k="n1" type="text" inputmode="decimal" /></td>' +
           '<td><input data-k="n2" type="text" inputmode="decimal" /></td>' +
           '<td><input data-k="n3" type="text" inputmode="decimal" /></td>' +
           '<td><input data-k="supletorio" type="text" inputmode="decimal" /></td>' +
-          '<td><input data-k="letras" type="text" /></td>' +
-          '<td style="text-align:left;"><input data-k="docente" type="text" /></td>' +
-          '<td class="row-actions"><button type="button" class="row-del" title="Eliminar fila">×</button></td>';
+          '<td><input data-k="cien" type="text" inputmode="decimal" /></td>' +
+          '<td><textarea data-k="letras" rows="1"></textarea></td>' +
+          '<td class="nc-text-left"><textarea data-k="docente" rows="1"></textarea></td>' +
+          '<td class="nc-signature-cell">&nbsp;</td>' +
+          '<td class="nc-actions-cell nc-screen-only">' +
+            '<div class="nc-row-actions">' +
+              '<button type="button" class="nc-icon-btn" data-action="add" title="Agregar fila debajo">+</button>' +
+              '<button type="button" class="nc-icon-btn nc-minus" data-action="remove" title="Quitar esta fila">-</button>' +
+            '</div>' +
+          '</td>';
         Object.keys(row).forEach(k => {
-          const input = tr.querySelector('input[data-k="' + k + '"]');
+          const input = tr.querySelector('[data-k="' + k + '"]');
           if (input) input.value = row[k] || "";
         });
-        tr.querySelectorAll("input").forEach(inp => {
+        tr.querySelectorAll("[data-k]").forEach(inp => {
+          resizeTextarea(inp);
           inp.addEventListener("input", function () {
             row[inp.dataset.k] = inp.value;
+            if (inp.dataset.k === "codigo") autocompleteSubject(row, tr);
+            resizeTextarea(inp);
             saveDraft();
           });
+          if (inp.dataset.k === "codigo") {
+            inp.addEventListener("blur", function () {
+              if (autocompleteSubject(row, tr)) saveDraft();
+            });
+          }
         });
-        tr.querySelector(".row-del").addEventListener("click", function () {
+        tr.querySelector('[data-action="add"]').addEventListener("click", function () {
           const idx = state.rows.indexOf(row);
-          if (idx >= 0) state.rows.splice(idx, 1);
-          if (!state.rows.length) state.rows.push(emptyRow());
+          state.rows.splice(idx + 1, 0, emptyRow());
           render();
           saveDraft();
+        });
+        tr.querySelector('[data-action="remove"]').addEventListener("click", function () {
+          removeRow(row);
         });
         return tr;
       }
 
       function render() {
+        refreshCodigoDatalist();
         tbody.innerHTML = "";
         state.rows.forEach((row, i) => tbody.appendChild(renderRow(row, i)));
+        resizeAllTextareas(tbody);
       }
 
       function addRow() {
@@ -4186,11 +4473,41 @@
         saveDraft();
       }
 
+      function removeRow(row) {
+        const idx = state.rows.indexOf(row);
+        if (idx >= 0) state.rows.splice(idx, 1);
+        if (!state.rows.length) state.rows.push(emptyRow());
+        render();
+        saveDraft();
+      }
+
+      function removeLastRow() {
+        if (state.rows.length > 1) state.rows.pop();
+        else state.rows[0] = emptyRow();
+        render();
+        saveDraft();
+      }
+
+      function setDefaults(force) {
+        const defaults = {
+          ncFechaRecepcion: todayISO(),
+          ncPrograma: "[13010] PREGRADO EN GOBIERNO Y RELACIONES INTERNACIONALES",
+          ncPct1: "30",
+          ncPct2: "30",
+          ncPct3: "40"
+        };
+        Object.keys(defaults).forEach(id => {
+          const el = $(id);
+          if (el && (force || !el.value)) el.value = defaults[id];
+        });
+      }
+
       function resetForm() {
         if (!confirm("¿Limpiar todo el formato de novedad de calificación?")) return;
         fields.forEach(id => { const el = $(id); if (el) el.value = ""; });
         checks.forEach(id => { const el = $(id); if (el) el.checked = false; });
         state.rows = [emptyRow()];
+        setDefaults(true);
         render();
         saveDraft();
       }
@@ -4205,9 +4522,14 @@
       function restore(data) {
         if (!data || typeof data !== "object") return;
         if (Array.isArray(data.rows) && data.rows.length) {
-          state.rows = data.rows.map(r => Object.assign(emptyRow(), r));
+          state.rows = data.rows.map(normalizeRow);
         }
-        fields.forEach(id => { const el = $(id); if (el && data[id] != null) el.value = data[id]; });
+        fields.forEach(id => {
+          const el = $(id);
+          if (!el || data[id] == null) return;
+          el.value = typeof data[id] === "boolean" ? (data[id] ? "X" : "") : data[id];
+          resizeTextarea(el);
+        });
         checks.forEach(id => { const el = $(id); if (el && data[id] != null) el.checked = !!data[id]; });
         render();
       }
@@ -4233,7 +4555,12 @@
         return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
       }
 
+      function prepareForPrint() {
+        resizeAllTextareas(document);
+      }
+
       function printNC() {
+        prepareForPrint();
         const fecha = ($("ncFechaRecepcion").value || todayISO()).replace(/[^0-9-]/g, "");
         const codigo = ($("ncEstudianteCodigo").value || "ESTUDIANTE").trim().replace(/[^A-Za-z0-9_-]/g, "") || "ESTUDIANTE";
         const filename = "NC_" + fecha + "_" + codigo;
@@ -4257,20 +4584,38 @@
       const btnPrint = $("btnNcPrint");
       const btnAdd = $("btnNcAddRow");
       const btnAdd2 = $("btnNcAddRow2");
+      const btnRemove = $("btnNcRemoveLast");
+      const btnRemove2 = $("btnNcRemoveLast2");
       const btnReset = $("btnNcReset");
       if (btnPrint) btnPrint.addEventListener("click", printNC);
       if (btnAdd) btnAdd.addEventListener("click", addRow);
       if (btnAdd2) btnAdd2.addEventListener("click", addRow);
+      if (btnRemove) btnRemove.addEventListener("click", removeLastRow);
+      if (btnRemove2) btnRemove2.addEventListener("click", removeLastRow);
       if (btnReset) btnReset.addEventListener("click", resetForm);
 
-      fields.forEach(id => { const el = $(id); if (el) el.addEventListener("input", saveDraft); });
+      fields.forEach(id => {
+        const el = $(id);
+        if (!el) return;
+        el.addEventListener("input", function () {
+          resizeTextarea(el);
+          saveDraft();
+        });
+      });
       checks.forEach(id => { const el = $(id); if (el) el.addEventListener("change", saveDraft); });
+      window.addEventListener("service:change", function (ev) {
+        if (ev.detail && ev.detail.id === "serviceNovedades") {
+          refreshCodigoDatalist();
+          setTimeout(() => resizeAllTextareas(document), 0);
+        }
+      });
 
       // Defaults
-      $("ncFechaRecepcion").value = todayISO();
+      setDefaults(false);
 
       render();
       loadDraft();
+      setTimeout(() => resizeAllTextareas(document), 500);
     })();
   </script>
 <script type="module">
